@@ -8,6 +8,7 @@
 
 #include "utilities/ray.h"
 #include "utilities/rgbcolor.h"
+#include "utilities/common.h"
 
 class World;
 

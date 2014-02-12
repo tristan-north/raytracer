@@ -5,6 +5,7 @@
 #include "utilities/rgbcolor.h"
 #include "utilities/vector3.h"
 #include "utilities/shaderec.h"
+#include "utilities/common.h"
 
 class AbstractBRDF {
 public:

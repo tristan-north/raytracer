@@ -6,6 +6,7 @@
 #include "utilities/rgbcolor.h"
 #include "utilities/ray.h"
 #include "utilities/matrix.h"
+#include "utilities/common.h"
 #include "geometricObjects/abstractgeo.h"
 
 class ShadeRec;

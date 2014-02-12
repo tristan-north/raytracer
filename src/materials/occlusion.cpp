@@ -1,4 +1,5 @@
 #include "occlusion.h"
+#include "utilities/common.h"
 #include <cmath>
 #include <QDebug>
 
@@ -16,8 +17,6 @@ void Occlusion::set_numSamples(int n)
 RGBColor Occlusion::shade(ShadeRec &sr)
 {
     float totalContribution = 0;
-    double hitDist = 0;
-    int num_objects = sr.w.objects.size();
     Ray shadowRay;
     shadowRay.o = sr.hit_point;
 
