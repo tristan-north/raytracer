@@ -15,6 +15,7 @@ void World::build(int hres, int vres) {
     if( !objLoader.load(*this, "testModel.obj", material) )
         return;
 
+	accelStruct_ptr = new Grid(this);
 
 	// view plane
 	vp.set_hres(hres);

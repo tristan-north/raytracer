@@ -56,7 +56,7 @@ RGBColor Occlusion::shade(ShadeRec &sr)
             // Transform ray to world space
             shadowRay.d = u*shadowRay.d.x + v*shadowRay.d.y + w*shadowRay.d.z;
 
-            hit = sr.w.shadow_intersection(shadowRay, kHugeValue);
+			hit = sr.w.accelStruct_ptr->shadow_intersection(shadowRay, kHugeValue);
 
             if(!hit) {
                 totalContribution += 1;

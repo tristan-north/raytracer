@@ -18,17 +18,22 @@
 #include "utilities/common.h"
 #include "utilities/objloader.h"
 #include "utilities/timer.h"
-#include "build/BuildShadedObjects.h"
+#include "accelerators/grid.h"
+#include "buildscene.h"
 
 
 extern ulong g_numPrimaryRays;
-extern Timer isectTimer;
 
 // default constructor
-World::World() : background_color(0), tracer_ptr(NULL), camera_ptr(NULL) {}
+World::World() : accelStruct_ptr(NULL), background_color(0), tracer_ptr(NULL), camera_ptr(NULL) {}
 
 // destructor
 World::~World() {
+	if (accelStruct_ptr) {
+		delete accelStruct_ptr;
+		accelStruct_ptr = NULL;
+	}
+
 	if(tracer_ptr) {
 		delete tracer_ptr;
 		tracer_ptr = NULL;
@@ -103,66 +108,6 @@ void World::display_pixel(const int row, const int column, const RGBColor& raw_c
 	int y = row;
 
 	screen_buffer[x + (y * vp.hres)] = (displayR << 16) + (displayG << 8) + displayB;
-}
-
-
-ShadeRec World::closest_intersection(const Ray& ray) {
-    timespec tp;
-    isectTimer.getTime(tp);
-
-    ShadeRec returnSr(*this);
-    returnSr.t = kHugeValue;
-
-    // Test intersection of each geometric object and keep the ShadeRec
-    // of the closest intersection.
-    int numObjects = objects.size();
-    ShadeRec testSr(*this);
-    double testT;
-    for (int j = 0; j < numObjects; j++) {
-        if (objects[j]->hit(ray, testT, testSr) && (testT < returnSr.t)) {
-            returnSr.t = testT;
-            returnSr.hit_an_object = true;
-            returnSr.material_ptr = objects[j]->get_material();
-            returnSr.hit_point = ray.o + testT * ray.d;
-            returnSr.normal = testSr.normal;
-            returnSr.local_hit_point = testSr.local_hit_point;
-        }
-    }
-
-    // Test intersection of each light
-    numObjects = lights.size();
-    for (int j = 0; j < numObjects; j++) {
-        if (lights[j]->hit(ray, testT, testSr) && (testT < returnSr.t)) {
-            returnSr.t = testT;
-            returnSr.hit_an_object = true;
-            returnSr.material_ptr = testSr.material_ptr;
-            returnSr.hit_point = ray.o + testT * ray.d;
-            returnSr.normal = testSr.normal;
-            returnSr.local_hit_point = testSr.local_hit_point;
-        }
-    }
-
-    isectTimer.add(tp);
-    return(returnSr);
-}
-
-
-bool World::shadow_intersection(const Ray& ray, double distToLight) {
-    timespec tp;
-    isectTimer.getTime(tp);
-
-    double t;
-    int numObjects = objects.size();
-
-    for( int j = 0; j < numObjects; j++ ) {
-        if (objects[j]->shadow_hit(ray, t) && t < distToLight) {
-            isectTimer.add(tp);
-            return true;
-        }
-    }
-
-    isectTimer.add(tp);
-    return false;
 }
 
 

@@ -19,6 +19,7 @@
 #include "utilities/ray.h"
 #include "utilities/meshdata.h"
 #include "utilities/common.h"
+#include "accelerators/abstractaccel.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ class Matte;
 class World
 {
 public:
+	AbstractAccel*				accelStruct_ptr;
 	ViewPlane					vp;
 	RGBColor					background_color;
     AbstractTracer*				tracer_ptr;
@@ -48,8 +50,6 @@ public:
 	void build(int hres, int vres);
 	void render_scanline(int scanlineNum);
 	void display_pixel(const int row, const int column, const RGBColor& pixel_color) const;
-    ShadeRec closest_intersection(const Ray& ray);
-    bool shadow_intersection(const Ray& ray, double distToLight);
 
 private:
 	void delete_objects(void);

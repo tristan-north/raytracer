@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 /*
 TODO:
 
- - Implement low discrepancy random number generator (eg sobol)
+ - Implement low discrepancy random number generator (eg sobol) or statified sampling
  - Use Intel IPP for vectors, image manipulation etc.
  - Implement hilbert bucket ordering http://en.wikipedia.org/wiki/Space-filling_curve
  - Implement intersection acceleration structure

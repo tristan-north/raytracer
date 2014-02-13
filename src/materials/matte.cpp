@@ -31,7 +31,7 @@ RGBColor Matte::shade(ShadeRec& sr) {
                 bool in_shadow;
                 shadowRay.d = wi;
                 // Intersection test for geo between shading point and light sample.
-                in_shadow = sr.w.shadow_intersection(shadowRay, distToLight);
+				in_shadow = sr.w.accelStruct_ptr->shadow_intersection(shadowRay, distToLight);
                 __sync_add_and_fetch(&g_numLightRays, 1);
 
 				if (!in_shadow) {

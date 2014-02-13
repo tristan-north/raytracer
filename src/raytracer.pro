@@ -13,7 +13,6 @@ HEADERS += \
     world/viewplane.h \
     world/camera.h \
     utilities/point2.h \
-    build/BuildShadedObjects.h \
     tracers/raycast.h \
     materials/matte.h \
     BRDFs/lambertian.h \
@@ -31,7 +30,10 @@ HEADERS += \
     tracers/abstracttracer.h \
     lights/rectlight.h \
     lights/envlight.h \
-    utilities/timer.h
+    utilities/timer.h \
+    world/buildscene.h \
+    accelerators/abstractaccel.h \
+    accelerators/grid.h
 
 SOURCES += \
     window.cpp \
@@ -65,6 +67,8 @@ SOURCES += \
     tracers/abstracttracer.cpp \
     lights/rectlight.cpp \
     lights/envlight.cpp \
-    utilities/timer.cpp
+    utilities/timer.cpp \
+    accelerators/abstractaccel.cpp \
+    accelerators/grid.cpp
 
 OTHER_FILES +=
