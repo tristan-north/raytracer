@@ -1,5 +1,5 @@
 #include "abstractaccel.h"
 
-AbstractAccel::AbstractAccel(World *w) : world_ptr(w)
+AbstractAccel::AbstractAccel(World &w) : world(w)
 {
 }

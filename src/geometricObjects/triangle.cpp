@@ -34,7 +34,7 @@ Normal Triangle::get_normal() const {
 }
 
 
-BBox Triangle::get_bounding_box() {
+BBox Triangle::get_bbox() const {
 	Point3 v1(mesh_ptr->vertices[index0]);
 	Point3 v2(mesh_ptr->vertices[index1]);
 	Point3 v3(mesh_ptr->vertices[index2]);
@@ -87,7 +87,6 @@ bool Triangle::hit(const Ray& ray, double& tmin, ShadeRec& sr) const {
 
 	tmin 				= t;
 	sr.normal 			= normal;  				// for flat shading
-	sr.local_hit_point 	= ray.o + t * ray.d;
 
 	return (true);
 }

@@ -7,18 +7,16 @@
 class BBox
 {
 public:
-	double x0, x1, y0, y1, z0, z1;
-	BBox(void);
-	BBox(	const double x0, const double x1,
-			const double y0, const double y1,
-			const double z0, const double z1);
-	BBox(const Point3 p0, const Point3 p1);
-	BBox(const BBox& bbox);
-	BBox& operator= (const BBox& rhs);
-	~BBox(void);
+	double xMin, xMax, yMin, yMax, zMin, zMax;
+	BBox();
+	BBox(const double xMin, const double xMax,
+		const double yMin, const double yMax,
+		const double zMin, const double zMax);
+	BBox(const Point3 pMin, const Point3 pMax);
 
-	bool hit(const Ray& ray) const;
+	bool hit(const Ray& ray, double& tmin) const;
 	bool inside(const Point3& p) const;
+	void expandToFit(const BBox& inBBox);
 };
 
 #endif // BBOX_H

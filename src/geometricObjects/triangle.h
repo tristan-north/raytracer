@@ -16,7 +16,7 @@ public:
 	virtual bool shadow_hit(const Ray& ray, double& tmin) const;
 	void compute_normal(const bool reverse_normal = false);
     Normal get_normal() const;
-    BBox get_bounding_box();
+	virtual BBox get_bbox() const;
 
 	MeshData* 	mesh_ptr;					// stores all the data
 	int			index0, index1, index2;  	// indices into the vertices array in the mesh

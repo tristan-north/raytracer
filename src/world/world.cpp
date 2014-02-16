@@ -1,6 +1,5 @@
 #include <QtGlobal>
 #include "world/world.h"
-#include "geometricObjects/plane.h"
 #include "geometricObjects/sphere.h"
 #include "geometricObjects/triangle.h"
 #include "tracers/raycast.h"
@@ -112,14 +111,14 @@ void World::display_pixel(const int row, const int column, const RGBColor& raw_c
 
 
 void World::delete_objects(void) {
-	int num_objects = objects.size();
+	int num_objects = primitives.size();
 
 	for (int j = 0; j < num_objects; j++) {
-		delete objects[j];
-		objects[j] = NULL;
+		delete primitives[j];
+		primitives[j] = NULL;
 	}
 
-    objects.erase(objects.begin(), objects.end());
+	primitives.erase(primitives.begin(), primitives.end());
 }
 
 

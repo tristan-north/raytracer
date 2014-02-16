@@ -27,8 +27,7 @@ bool RectLight::hit(const Ray& ray, double& tmin, ShadeRec &sr) const {
 
     tmin = t;
     sr.normal = normal;
-    sr.local_hit_point = p;
-
+	sr.hit_an_object = true;
     sr.material_ptr = &material;
 
     return true;

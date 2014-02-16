@@ -4,6 +4,7 @@
 #include "utilities/point3.h"
 #include "utilities/ray.h"
 #include "utilities/shaderec.h"
+#include "utilities/bbox.h"
 
 class AbstractMaterial;
 
@@ -15,8 +16,8 @@ public:
 	virtual bool hit(const Ray& ray, double& t, ShadeRec& s) const = 0;
 	virtual bool shadow_hit(const Ray& ray, double& t) const = 0;
     AbstractMaterial* get_material() const;
-
-    virtual void set_material(AbstractMaterial* mPtr); // needs to virtual so that it can be overriden in Compound
+	void set_material(AbstractMaterial* mPtr);
+	virtual BBox get_bbox() const = 0;
 
 
 protected:

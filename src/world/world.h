@@ -33,7 +33,7 @@ public:
 	RGBColor					background_color;
     AbstractTracer*				tracer_ptr;
 	Camera*						camera_ptr;
-    vector<AbstractGeo*>        objects;
+	vector<AbstractGeo*>        primitives;
     vector<AbstractLight*> 		lights;
     vector<AbstractMaterial*>   materials;
     vector<MeshData*>           meshDatas;
@@ -42,7 +42,7 @@ public:
     World();
 	~World();
 
-	void add_object(AbstractGeo* object_ptr);
+	void add_primitive(AbstractGeo* primitive_ptr);
 	void add_light(AbstractLight* light_ptr);
     void add_material(AbstractMaterial* mat_ptr);
     void add_meshData(MeshData* meshData_ptr);
@@ -60,8 +60,8 @@ private:
 };
 
 
-inline void World::add_object(AbstractGeo* object_ptr) {
-	objects.push_back(object_ptr);
+inline void World::add_primitive(AbstractGeo* primitive_ptr) {
+	primitives.push_back(primitive_ptr);
 }
 
 inline void World::add_light(AbstractLight* light_ptr) {

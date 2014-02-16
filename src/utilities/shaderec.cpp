@@ -11,24 +11,22 @@ ShadeRec::ShadeRec(World& wr)
 	: 	hit_an_object(false),
 		material_ptr(0),
 		hit_point(),
-		local_hit_point(),
 		normal(),
 		ray(),
-		depth(0),
+		rayDepth(0),
 		t(0.0),
 		w(wr)
 {}
 
+ShadeRec &ShadeRec::operator=(const ShadeRec &rhs)
+{
+	hit_an_object = rhs.hit_an_object;
+	material_ptr = rhs.material_ptr;
+	hit_point = rhs.hit_point;
+	normal = rhs.normal;
+	ray = rhs.ray;
+	rayDepth = rhs.rayDepth;
+	t = rhs.t;
 
-ShadeRec::ShadeRec(const ShadeRec& sr)
-	: 	hit_an_object(sr.hit_an_object),
-		material_ptr(sr.material_ptr),
-		hit_point(sr.hit_point),
-		local_hit_point(sr.local_hit_point),
-		normal(sr.normal),
-		ray(sr.ray),
-		depth(sr.depth),
-		t(sr.t),
-		w(sr.w)
-{}
-
+	return (*this);
+}

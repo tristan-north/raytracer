@@ -68,7 +68,7 @@ int ObjLoader::load(World& world, const string filepath, AbstractMaterial* mater
 
 				// Need to -1 from the vertex index as in the .obj file they start at 1 not 0.
 				Triangle* t = new Triangle(meshData, vIndex0-1, vIndex1-1, vIndex2-1);
-				world.add_object(t);
+				world.add_primitive(t);
 				t->compute_normal();
                 t->set_material(material);
 

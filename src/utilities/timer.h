@@ -11,8 +11,11 @@ public:
     static void getTime(timespec &tp);
     void add(const timespec startTp);
     ulong getAccumulatedMsec();
+	static float getElapsedMsec(const timespec &tp);
 
 private:
+	static ulong getDifferenceInNsec(const timespec &startTp, const timespec &endTp);
+
     ulong accumulated_nsec;
 };
 

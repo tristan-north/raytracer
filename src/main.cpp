@@ -4,7 +4,8 @@
 
 ulong g_numPrimaryRays = 0;
 ulong g_numLightRays = 0;
-Timer isectTimer;
+Timer closestIsectTimer;
+Timer shadowIsectTimer;
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,10 @@ int main(int argc, char *argv[])
 
 /*
 TODO:
+
+ - Optimise grid intersection for shadow rays. eg make use of maxT.
+ - Check grid intersection code against scratchapixel.
+
 
  - Implement low discrepancy random number generator (eg sobol) or statified sampling
  - Use Intel IPP for vectors, image manipulation etc.

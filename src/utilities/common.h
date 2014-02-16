@@ -2,6 +2,7 @@
 #define CONSTANTS_H
 
 #include <stdlib.h>
+#include <float.h>
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
@@ -12,7 +13,7 @@ const double 	invPI 		= 0.3183098861837906715;
 const double 	invTWO_PI 	= 0.1591549430918953358;
 
 const double 	kEpsilon 	= 0.0001;
-const double	kHugeValue	= 1.0E10;
+const double 	kHugeValue  = FLT_MAX;
 
 const float 	invRAND_MAX = 1.0 / (float)RAND_MAX;
 

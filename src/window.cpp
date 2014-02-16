@@ -9,7 +9,8 @@ extern int g_width;
 extern int g_height;
 extern ulong g_numPrimaryRays;
 extern ulong g_numLightRays;
-extern Timer isectTimer;
+extern Timer closestIsectTimer;
+extern Timer shadowIsectTimer;
 
 World world;
 
@@ -68,7 +69,8 @@ void Window::renderScanline()
 	}
     else {
         qDebug("Render time: %.2fs", renderStartTime.elapsed() / 1000.0);
-        qDebug("Intersection time: %.2fs", isectTimer.getAccumulatedMsec() / 1000.0);
+		qDebug("Closest intersection time: %.2fs", closestIsectTimer.getAccumulatedMsec() / 1000.0);
+		qDebug("Shadow intersection time: %.2fs", shadowIsectTimer.getAccumulatedMsec() / 1000.0);
         qDebug("Primary rays: %ld  (%.1f /pixel)", g_numPrimaryRays, (double)g_numPrimaryRays/(double)(g_width*g_height));
         qDebug("Light rays: %ld  (%.1f /pixel)", g_numLightRays, (double)g_numLightRays/(double)(g_width*g_height));
     }

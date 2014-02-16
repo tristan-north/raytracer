@@ -1,7 +1,6 @@
 HEADERS += \
     window.h \
     geometricObjects/sphere.h \
-    geometricObjects/plane.h \
     utilities/vector3.h \
     utilities/shaderec.h \
     utilities/rgbcolor.h \
@@ -39,7 +38,6 @@ SOURCES += \
     window.cpp \
     main.cpp \
     geometricObjects/sphere.cpp \
-    geometricObjects/plane.cpp \
     utilities/vector3.cpp \
     utilities/shaderec.cpp \
     utilities/rgbcolor.cpp \
