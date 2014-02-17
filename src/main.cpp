@@ -25,7 +25,7 @@ TODO:
  - Check grid intersection code against scratchapixel.
 
 
- - Implement low discrepancy random number generator (eg sobol) or statified sampling
+ - Implement multi-jittered sampling as recommended by Max.
  - Use Intel IPP for vectors, image manipulation etc.
  - Implement hilbert bucket ordering http://en.wikipedia.org/wiki/Space-filling_curve
  - Implement intersection acceleration structure
