@@ -41,4 +41,19 @@ TODO:
  - Light::in_shadow() goes through each object calling shadow_hit() which returns a bool.
 
 
+
+PAPERS REFERENCED
+
+Grid acceleration structure:
+
+"A Parallel Ray Tracing Computer", Cleary 1983
+Computing the optimal grid resolution.
+
+"Ray Tracing Animated Scenes using Coherent Grid Traversal", Wald 2006
+Also computing the optimal grid resolution.
+
+"ARTS: Accelerated Ray Tracing Systems", Akira Fujimoto 1986
+Initial paper on grid acceleration. Explains the 3D-Digital Differential Analyser (or DDA)
+grid traversal method.
+
 */
