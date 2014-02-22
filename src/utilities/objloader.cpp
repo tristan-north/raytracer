@@ -96,7 +96,7 @@ vector<string> ObjLoader::getNumbersAsStrings(const string& line) {
 	int indexEnd;
 	vector<string> stringsList;
 	while(true) {
-		indexStart = line.find_first_not_of(' ', indexStart);
+		indexStart = line.find_first_not_of(" \r", indexStart);
 		if( indexStart == -1 )
 			break;
 

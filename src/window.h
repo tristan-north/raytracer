@@ -23,7 +23,7 @@ protected:
 private:
 	QImage *qImage;
 	QTime renderStartTime;
-	int nextScanline;
+	uint nextScanline;
 };
 
 #endif // WINDOW_H

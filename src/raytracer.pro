@@ -9,7 +9,6 @@ HEADERS += \
     utilities/normal.h \
     utilities/matrix.h \
     world/world.h \
-    world/viewplane.h \
     world/camera.h \
     utilities/point2.h \
     tracers/raycast.h \
@@ -46,7 +45,6 @@ SOURCES += \
     utilities/normal.cpp \
     utilities/matrix.cpp \
     world/world.cpp \
-    world/viewplane.cpp \
     world/camera.cpp \
     utilities/point2.cpp \
     tracers/raycast.cpp \

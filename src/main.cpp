@@ -20,7 +20,6 @@ int main(int argc, char *argv[])
 
 /*
 TODO:
-
  - Optimise grid intersection for shadow rays. eg make use of maxT.
  - Check grid intersection code against scratchapixel.
 
@@ -28,7 +27,7 @@ TODO:
  - Implement multi-jittered sampling as recommended by Max.
  - Use Intel IPP for vectors, image manipulation etc.
  - Implement hilbert bucket ordering http://en.wikipedia.org/wiki/Space-filling_curve
- - Implement intersection acceleration structure
+ - Implement BVH
  - Add multiple bounces
 
 

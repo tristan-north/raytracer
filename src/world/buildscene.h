@@ -1,7 +1,8 @@
-int g_width = 720/4;
-int g_height = 576/4;
+extern const uint g_hres = 720/3;
+extern const uint g_vres = 576/3;
 
-void World::build(int hres, int vres) {
+void World::build() {
+	pixelSamples = 2;
 
 //    Occlusion* material = new Occlusion;
 //    material->set_numSamples(6);
@@ -16,33 +17,21 @@ void World::build(int hres, int vres) {
         return;
 
 	accelStruct_ptr = new Grid(*this);
-
-	// view plane
-	vp.set_hres(hres);
-	vp.set_vres(vres);
-	vp.set_samples(4);  // This is total samples per pixel and should be a square number.
-	vp.set_gamma(2.2);
-
 	tracer_ptr = new RayCast(this);
 
-
 	// camera
-	Camera* cam_ptr = new Camera;
-	cam_ptr->set_eye(0, 100, -450);
-	cam_ptr->set_lookat(0, 70, 0);
-	cam_ptr->set_view_distance(400);
-	cam_ptr->compute_uvw();
-	set_camera(cam_ptr);
-
+	camera.fov = 40;
+	camera.set_transform(0, 100, -205,  // translate
+						 -7.6, 180, 0);  // rotate
 
 	// lights
 	RectLight* light_ptr = new RectLight;
 	light_ptr->set_intensity(12);
 	light_ptr->set_color(1, 1, 1);
 	light_ptr->set_num_samples(4);
-	light_ptr->set_transform(0, 138, 80,
-							  180, 0, 0,
-							  50, 50, 50);
+	light_ptr->set_transform(0, 138, 80,   // translate
+							  180, 0, 0,   // rotate
+							  50, 50, 50); // scale
 	add_light(light_ptr);
 
 	EnvLight* envlight_ptr = new EnvLight;

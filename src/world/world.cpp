@@ -24,7 +24,11 @@
 extern ulong g_numPrimaryRays;
 
 // default constructor
-World::World() : accelStruct_ptr(NULL), background_color(0), tracer_ptr(NULL), camera_ptr(NULL) {}
+World::World() : accelStruct_ptr(NULL),
+				background_color(0),
+				tracer_ptr(NULL),
+				pixelSamples(1)
+{}
 
 // destructor
 World::~World() {
@@ -38,11 +42,6 @@ World::~World() {
 		tracer_ptr = NULL;
 	}
 
-	if (camera_ptr) {
-		delete camera_ptr;
-		camera_ptr = NULL;
-	}
-
 	delete_objects();
 	delete_lights();
     delete_materials();
@@ -51,31 +50,44 @@ World::~World() {
 
 
 void World::render_scanline(int scanlineNum) {
-	RGBColor	pixel_color;
-	Ray			ray;
-	int 		depth = 0;
-	Point2		pp;		// sample point on a pixel
-	int n = (int)sqrt((float)vp.num_samples);
+	RGBColor pixel_color;
+	Ray ray;
+	int depth = 0;
+	Point2 pp;		// sample point
+	const float aspectRatio = float(g_hres)/g_vres;
+	const float viewAngle = tan(camera.fov * 0.5 * M_PI / 180);
 
-	ray.o = camera_ptr->get_eye();
+	ray.o = camera.get_eye_pos();
 
-	for (int x = 0; x < vp.hres; x++) {		// across
+	for (uint x = 0; x < g_hres; x++) {
 		pixel_color = 0;
 
-		for (int p = 0; p < n; p++)			// up sub pixel
-			for (int q = 0; q < n; q++) {	// across sub pixel
-				pp.x = x - 0.5 * vp.hres + (q + 0.5) / n;
-				pp.y = 0.5 * vp.vres - scanlineNum + (p + 0.5) / n;
-				// Use basic jittered sampling
-//				pp.x = x - 0.5 * vp.hres + (q + rand_float()) / n;
-//				pp.y = 0.5 * vp.vres - scanlineNum + (p + rand_float()) / n;
+		for (uint p = 0; p < pixelSamples; p++)			// up sub pixel
+			for (uint q = 0; q < pixelSamples; q++) {	// across sub pixel
+				// move to center of pixel
+				pp.x = x + 0.5;
+				pp.y = scanlineNum + 0.5;
 
-				ray.d = camera_ptr->get_direction(pp);
+				// randomize position within pixel
+				pp.x += ::rand_float() - 0.5;
+				pp.y += ::rand_float() - 0.5;
+
+				// remap from pixel coords (raster) to screen space (-1 to 1).
+				pp.x = 2*pp.x / g_hres - 1;
+				pp.y = 1 - 2*pp.y / g_vres;
+
+				// remap from screen space to cam space (pp.z is always -1).
+				pp.x *= viewAngle * aspectRatio;
+				pp.y *= viewAngle;
+
+				ray.d = camera.cam_to_world(Point3(pp.x, pp.y, -1)) - ray.o;
+				ray.d.normalize();
+
                 pixel_color += tracer_ptr->trace_ray(ray, depth);
                 __sync_add_and_fetch(&g_numPrimaryRays, 1);
 			}
 
-		pixel_color /= vp.num_samples;
+		pixel_color /= pixelSamples*pixelSamples;
 		display_pixel(scanlineNum, x, pixel_color);
 	}
 
@@ -88,10 +100,7 @@ void World::display_pixel(const int row, const int column, const RGBColor& raw_c
 	RGBColor mapped_color;
 
 	// do gamma
-	if (vp.gamma != 1.0)
-		mapped_color = raw_color.powc(vp.inv_gamma);
-	else
-		mapped_color = raw_color;
+	mapped_color = raw_color.powc(0.45);  // 2.2 gamma
 
 	// clamp to 1
 	mapped_color.r = min(mapped_color.r, 1.0f);
@@ -106,7 +115,7 @@ void World::display_pixel(const int row, const int column, const RGBColor& raw_c
 	int x = column;
 	int y = row;
 
-	screen_buffer[x + (y * vp.hres)] = (displayR << 16) + (displayG << 8) + displayB;
+	screen_buffer[x + (y * g_hres)] = (displayR << 16) + (displayG << 8) + displayB;
 }
 
 

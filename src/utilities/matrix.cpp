@@ -62,16 +62,16 @@ void Matrix::scale(float sx, float sy, float sz)
 void Matrix::rotateByDeg(float rx, float ry, float rz)
 {
     const float degToRad = 0.017453293;
-    rx *= degToRad;
+	rx *= degToRad;
     ry *= degToRad;
     rz *= degToRad;
 
     Matrix rotXMatrix, rotYMatrix, rotZMatrix;
 
-    rotXMatrix.m[1][1] = cos(rx);
-    rotXMatrix.m[1][2] = -sin(rx);
-    rotXMatrix.m[2][1] = sin(rx);
-    rotXMatrix.m[2][2] = cos(rx);
+	rotXMatrix.m[1][1] = cos(rx);
+	rotXMatrix.m[1][2] = sin(rx);
+	rotXMatrix.m[2][1] = -sin(rx);
+	rotXMatrix.m[2][2] = cos(rx);
 
     rotYMatrix.m[0][0] = cos(ry);
     rotYMatrix.m[0][2] = sin(ry);

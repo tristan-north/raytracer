@@ -1,16 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-// The World class does not have a copy constructor or an assignment operator, for the followign reasons:
-// 1 	There's no need to copy construct or assign the World
-// 2 	We wouldn't want to do this anyway, because the world can contain an arbitray amount of data
-// 3 	These operations wouldn't work because the world is self-referencing:
-//	 	the Tracer base class contains a pointer to the world. If we wrote a correct copy constructor for the
-// 	  	Tracer class, the World copy construtor would call itself recursively until we ran out of memory.
-
-
 #include <vector>
-#include "world/viewplane.h"
 #include "world/camera.h"
 #include "utilities/rgbcolor.h"
 #include "tracers/abstracttracer.h"
@@ -28,26 +19,25 @@ class Matte;
 class World
 {
 public:
+	World();
+	~World();
+
 	AbstractAccel*				accelStruct_ptr;
-	ViewPlane					vp;
 	RGBColor					background_color;
     AbstractTracer*				tracer_ptr;
-	Camera*						camera_ptr;
+	Camera						camera;
 	vector<AbstractGeo*>        primitives;
     vector<AbstractLight*> 		lights;
     vector<AbstractMaterial*>   materials;
     vector<MeshData*>           meshDatas;
-	unsigned int* 				screen_buffer;
-
-    World();
-	~World();
+	uint* 						screen_buffer;
+	uint 						pixelSamples;
 
 	void add_primitive(AbstractGeo* primitive_ptr);
 	void add_light(AbstractLight* light_ptr);
     void add_material(AbstractMaterial* mat_ptr);
     void add_meshData(MeshData* meshData_ptr);
-	void set_camera(Camera* c_ptr);
-	void build(int hres, int vres);
+	void build();
 	void render_scanline(int scanlineNum);
 	void display_pixel(const int row, const int column, const RGBColor& pixel_color) const;
 
@@ -76,8 +66,5 @@ inline void World::add_meshData(MeshData* meshData_ptr) {
     meshDatas.push_back(meshData_ptr);
 }
 
-inline void World::set_camera(Camera* c_ptr) {
-	camera_ptr = c_ptr;
-}
 
 #endif // WORLD_H
