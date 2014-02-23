@@ -17,14 +17,16 @@ class ShadeRec
 public:
 	ShadeRec(World& wr);				// constructor
 
-	bool				hit_an_object;		// did the ray hit an object?
-	AbstractMaterial* 	material_ptr;		// Pointer to the nearest object's material
-	Point3				hit_point;			// World coordinates of intersection
-	Normal				normal;				// normal at hit point
-	Ray					ray;				// Required for specular highlights and area lights
-	int					rayDepth;			// recursion depth
-	float				t;					// ray parameter
-	World&				w;					// world reference for shading
+	bool hit_an_object;		// did the ray hit an object?
+	AbstractMaterial* material_ptr;		// Pointer to the nearest object's material
+	Point3 hit_point;			// World coordinates of intersection
+	Normal normal;				// normal at hit point
+	Ray ray;				// Required for specular highlights and area lights
+	float t;					// ray parameter
+	World& world;				// world reference for shading
+	Vector3 u;                 // u, v, w used to transform to world space
+	Vector3 v;
+	Vector3 w;
 
 	ShadeRec& operator= (const ShadeRec& rhs);			// assignment operator
 

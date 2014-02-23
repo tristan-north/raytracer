@@ -9,8 +9,8 @@ class AbstractMaterial
 {
 public:
 
-    AbstractMaterial(void);
-	virtual RGBColor shade(ShadeRec& sr);
+	AbstractMaterial();
+	virtual RGBColor shade(ShadeRec& sr, uint rayDepth);
 };
 
 #endif // ABSTRACTMATERIAL_H

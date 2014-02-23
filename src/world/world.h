@@ -20,7 +20,6 @@ class World
 {
 public:
 	World();
-	~World();
 
 	AbstractAccel*				accelStruct_ptr;
 	RGBColor					background_color;
@@ -31,7 +30,11 @@ public:
     vector<AbstractMaterial*>   materials;
     vector<MeshData*>           meshDatas;
 	uint* 						screen_buffer;
-	uint 						pixelSamples;
+
+	struct { uint pixelSamples;
+			 uint maxRayDepth;
+			 uint indirectSamples;}
+	settings;
 
 	void add_primitive(AbstractGeo* primitive_ptr);
 	void add_light(AbstractLight* light_ptr);
@@ -40,12 +43,9 @@ public:
 	void build();
 	void render_scanline(int scanlineNum);
 	void display_pixel(const int row, const int column, const RGBColor& pixel_color) const;
+	void cleanup();
 
 private:
-	void delete_objects(void);
-	void delete_lights(void);
-    void delete_materials(void);
-    void delete_meshDatas(void);
 	float rand_float();
 };
 

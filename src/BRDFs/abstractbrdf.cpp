@@ -1,7 +1,7 @@
 #include "abstractbrdf.h"
 
 
-AbstractBRDF::AbstractBRDF(void) {}
+AbstractBRDF::AbstractBRDF() {}
 
 RGBColor AbstractBRDF::f(const ShadeRec& sr, const Vector3& wo, const Vector3& wi) const {
 	return (0);

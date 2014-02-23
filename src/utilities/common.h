@@ -1,8 +1,11 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <stdlib.h>
 #include <float.h>
+#include <vector>
+#include "utilities/vector3.h"
+#include <cmath>
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
@@ -21,5 +24,50 @@ inline float rand_float() {
 	return (float)rand() / (float)RAND_MAX;
 }
 
+// This is the recommended way to get a vector to actually
+// release its memory.
+template <typename T>
+inline void free_vector(std::vector<T>& toFree) {
+	uint numItems = toFree.size();
+	for (uint i = 0; i < numItems; i++) {
+		delete toFree[i];
+		toFree[i] = NULL;
+	}
 
-#endif // CONSTANTS_H
+	toFree.erase(toFree.begin(), toFree.end());
+
+	std::vector<T> v;
+	v.swap(toFree);
+}
+
+inline Vector3 get_uniform_hemisphere_sample() {
+	float rnd1 = rand_float();
+	float rnd2 = rand_float();
+
+	float sin_theta = sqrt(1 - rnd1*rnd1);
+	float phi = 2 * PI * rnd2;
+
+	Vector3 dir;
+	dir.x = sin_theta * sin(phi);
+	dir.y = rnd1;
+	dir.z = sin_theta * cos(phi);
+
+	return dir;
+}
+
+inline Vector3 get_cosine_hemisphere_sample() {
+	float rnd1 = rand_float();
+	float rnd2 = rand_float();
+
+	float r = sqrt(rnd1);
+	float theta = 2 * PI * rnd2;
+
+	Vector3 dir;
+	dir.x = r * cos(theta);
+	dir.y = sqrt(std::max(0.0f, 1-rnd1));
+	dir.z = r * sin(theta);
+
+	return dir;
+}
+
+#endif // COMMON_H

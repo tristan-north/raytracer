@@ -15,7 +15,7 @@ class AbstractLight
 {
 public:
 
-    AbstractLight(void);
+	AbstractLight();
 
     void set_intensity(const float b);
 	void set_color(const float c);

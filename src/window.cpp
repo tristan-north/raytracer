@@ -73,5 +73,7 @@ void Window::renderScanline()
 		qDebug("Closest intersection time: %.2fs", closestIsectTimer.getAccumulatedMsec() / 1000.0);
 		qDebug("Shadow intersection time: %.2fs", shadowIsectTimer.getAccumulatedMsec() / 1000.0);
 		qDebug("Render time: %.2fs", renderStartTime.elapsed() / 1000.0);
+
+		world.cleanup();
 	}
 }

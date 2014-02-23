@@ -11,7 +11,7 @@ public:
     void set_cd(const RGBColor c);
     void set_cd(const float r, const float g, const float b);
 
-    virtual RGBColor shade(ShadeRec& sr);
+	virtual RGBColor shade(ShadeRec& sr, uint rayDepth);
 
 private:
     RGBColor cd;

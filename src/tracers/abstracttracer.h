@@ -20,7 +20,7 @@ public:
     AbstractTracer(World* _world_ptr);
     virtual ~AbstractTracer(void);
 
-	virtual RGBColor trace_ray(const Ray ray, const int depth) const;
+	virtual RGBColor trace_ray(const Ray ray, uint rayDepth) const;
 
 protected:
 	World* world_ptr;

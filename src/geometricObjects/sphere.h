@@ -18,8 +18,8 @@ public:
 	virtual BBox get_bbox() const;
 
 private:
-	Point3 center;					// center coordinates as a point
-	double radius;					// the radius
+	Point3 center;
+	double radius;
 };
 
 

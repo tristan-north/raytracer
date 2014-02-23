@@ -1,8 +1,10 @@
-extern const uint g_hres = 720/3;
-extern const uint g_vres = 576/3;
+extern const uint g_hres = 720/4;
+extern const uint g_vres = 576/4;
 
 void World::build() {
-	pixelSamples = 2;
+	settings.pixelSamples = 2;
+	settings.maxRayDepth = 1;
+	settings.indirectSamples = 4;
 
 //    Occlusion* material = new Occlusion;
 //    material->set_numSamples(6);
@@ -26,7 +28,7 @@ void World::build() {
 
 	// lights
 	RectLight* light_ptr = new RectLight;
-	light_ptr->set_intensity(12);
+	light_ptr->set_intensity(15);
 	light_ptr->set_color(1, 1, 1);
 	light_ptr->set_num_samples(4);
 	light_ptr->set_transform(0, 138, 80,   // translate
@@ -34,8 +36,8 @@ void World::build() {
 							  50, 50, 50); // scale
 	add_light(light_ptr);
 
-	EnvLight* envlight_ptr = new EnvLight;
-	envlight_ptr->set_intensity(0.5);
-	envlight_ptr->set_num_samples(16);
-	add_light(envlight_ptr);
+//	EnvLight* envlight_ptr = new EnvLight;
+//	envlight_ptr->set_intensity(0.5);
+//	envlight_ptr->set_num_samples(16);
+//	add_light(envlight_ptr);
 }

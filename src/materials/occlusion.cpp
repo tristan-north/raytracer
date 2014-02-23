@@ -14,7 +14,7 @@ void Occlusion::set_numSamples(int n)
 }
 
 
-RGBColor Occlusion::shade(ShadeRec &sr)
+RGBColor Occlusion::shade(ShadeRec &sr, uint rayDepth)
 {
     float totalContribution = 0;
     Ray shadowRay;
@@ -56,7 +56,7 @@ RGBColor Occlusion::shade(ShadeRec &sr)
             // Transform ray to world space
             shadowRay.d = u*shadowRay.d.x + v*shadowRay.d.y + w*shadowRay.d.z;
 
-			hit = sr.w.accelStruct_ptr->shadow_intersection(shadowRay, kHugeValue);
+			hit = sr.world.accelStruct_ptr->shadow_intersection(shadowRay, kHugeValue);
 
             if(!hit) {
                 totalContribution += 1;

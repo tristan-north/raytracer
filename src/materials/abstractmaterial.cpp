@@ -1,8 +1,8 @@
 #include "materials/abstractmaterial.h"
 
 
-AbstractMaterial::AbstractMaterial(void) {}
+AbstractMaterial::AbstractMaterial() {}
 
-RGBColor AbstractMaterial::shade(ShadeRec& sr) {
+RGBColor AbstractMaterial::shade(ShadeRec& sr, uint rayDepth) {
 	return (0);
 }

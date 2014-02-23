@@ -13,9 +13,8 @@ ShadeRec::ShadeRec(World& wr)
 		hit_point(),
 		normal(),
 		ray(),
-		rayDepth(0),
 		t(0.0),
-		w(wr)
+		world(wr)
 {}
 
 ShadeRec &ShadeRec::operator=(const ShadeRec &rhs)
@@ -25,7 +24,6 @@ ShadeRec &ShadeRec::operator=(const ShadeRec &rhs)
 	hit_point = rhs.hit_point;
 	normal = rhs.normal;
 	ray = rhs.ray;
-	rayDepth = rhs.rayDepth;
 	t = rhs.t;
 
 	return (*this);

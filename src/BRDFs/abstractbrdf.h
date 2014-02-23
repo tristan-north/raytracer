@@ -10,7 +10,7 @@
 class AbstractBRDF {
 public:
 
-    AbstractBRDF(void);
+	AbstractBRDF();
 
 	virtual RGBColor f(const ShadeRec& sr, const Vector3& wo, const Vector3& wi) const;
 	virtual RGBColor sample_f(const ShadeRec& sr, const Vector3& wo, Vector3& wi) const;

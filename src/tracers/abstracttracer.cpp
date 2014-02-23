@@ -10,7 +10,7 @@ AbstractTracer::~AbstractTracer(void) {
 }
 
 
-RGBColor AbstractTracer::trace_ray(const Ray ray, const int depth) const {
+RGBColor AbstractTracer::trace_ray(const Ray ray, uint rayDepth) const {
 	return (0);
 }
 

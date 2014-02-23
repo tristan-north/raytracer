@@ -96,6 +96,11 @@ Grid::Grid(World& w) : AbstractAccel(w)
 	qDebug("Finished building acceleration structure. Build time %.4fs", Timer::getElapsedMsec(tp) / 1000.0);
 }
 
+Grid::~Grid()
+{
+	delete [] cells;
+}
+
 
 ShadeRec Grid::closest_intersection(const Ray &ray)
 {
@@ -131,7 +136,7 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 	ShadeRec testSr(world);
 
 	// Get intersection with any lights first, if not a shadow ray.
-	double t;
+	double t;/*
 	if( !isShadowRay ) {
 		lightSr.t = kHugeValue;
 		uint numObjects = world.lights.size();
@@ -145,7 +150,7 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 			}
 		}
 	}
-
+*/
 	double bboxIsecDist = 0;
 	// Check if ray is inside bbox.
 	if( !bbox.inside(ray.o) ) {
@@ -195,6 +200,9 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 	// Traverse the grid.
 	t = 0;
 	Cell* cell;
+	const int maxCellIndexX = (int)(gridRes.x-1);
+	const int maxCellIndexY = (int)(gridRes.y-1);
+	const int maxCellIndexZ = (int)(gridRes.z-1);
 	while(true) {
 		// Intersect the primitives in the current cell.
 		cell = get_cell(cellIndex.x, cellIndex.y, cellIndex.z);
@@ -226,7 +234,7 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 		}
 
 		// Break if the next cell is outside the grid.
-		if( cellIndex.x > (int)(gridRes.x-1) || cellIndex.y > (int)(gridRes.y-1) || cellIndex.z > (int)(gridRes.z-1) )
+		if( cellIndex.x > maxCellIndexX || cellIndex.y > maxCellIndexY || cellIndex.z > maxCellIndexZ )
 			break;
 		if( cellIndex.x < 0 || cellIndex.y < 0 || cellIndex.z < 0)
 			break;

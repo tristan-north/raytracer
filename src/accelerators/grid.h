@@ -13,6 +13,7 @@ class Grid : public AbstractAccel
 {
 public:
 	Grid(World &w);
+	~Grid();
 
 	virtual ShadeRec closest_intersection(const Ray& ray);
 	virtual bool shadow_intersection(const Ray& ray, double distToLight);
@@ -33,9 +34,7 @@ class Cell
 public:
 	void addPrimitive(AbstractGeo* primitive);
 	bool intersectPrimitives(const Ray& ray, ShadeRec& returnSr, ShadeRec& testSr);
-
-//private:
-	vector<AbstractGeo*> primitives;
+	std::vector<AbstractGeo*> primitives;
 };
 
 #endif // GRID_H

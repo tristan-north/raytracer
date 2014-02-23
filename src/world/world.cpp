@@ -23,15 +23,16 @@
 
 extern ulong g_numPrimaryRays;
 
-// default constructor
+
 World::World() : accelStruct_ptr(NULL),
 				background_color(0),
-				tracer_ptr(NULL),
-				pixelSamples(1)
-{}
+				tracer_ptr(NULL)
+{
+	settings.pixelSamples = 1;
+	settings.maxRayDepth = 2;
+}
 
-// destructor
-World::~World() {
+void World::cleanup() {
 	if (accelStruct_ptr) {
 		delete accelStruct_ptr;
 		accelStruct_ptr = NULL;
@@ -42,17 +43,16 @@ World::~World() {
 		tracer_ptr = NULL;
 	}
 
-	delete_objects();
-	delete_lights();
-    delete_materials();
-    delete_meshDatas();
+	free_vector(primitives);
+	free_vector(lights);
+	free_vector(materials);
+	free_vector(meshDatas);
 }
 
 
 void World::render_scanline(int scanlineNum) {
 	RGBColor pixel_color;
 	Ray ray;
-	int depth = 0;
 	Point2 pp;		// sample point
 	const float aspectRatio = float(g_hres)/g_vres;
 	const float viewAngle = tan(camera.fov * 0.5 * M_PI / 180);
@@ -62,8 +62,8 @@ void World::render_scanline(int scanlineNum) {
 	for (uint x = 0; x < g_hres; x++) {
 		pixel_color = 0;
 
-		for (uint p = 0; p < pixelSamples; p++)			// up sub pixel
-			for (uint q = 0; q < pixelSamples; q++) {	// across sub pixel
+		for (uint p = 0; p < settings.pixelSamples; p++)			// up sub pixel
+			for (uint q = 0; q < settings.pixelSamples; q++) {	// across sub pixel
 				// move to center of pixel
 				pp.x = x + 0.5;
 				pp.y = scanlineNum + 0.5;
@@ -83,11 +83,11 @@ void World::render_scanline(int scanlineNum) {
 				ray.d = camera.cam_to_world(Point3(pp.x, pp.y, -1)) - ray.o;
 				ray.d.normalize();
 
-                pixel_color += tracer_ptr->trace_ray(ray, depth);
+				pixel_color += tracer_ptr->trace_ray(ray, 0);
                 __sync_add_and_fetch(&g_numPrimaryRays, 1);
 			}
 
-		pixel_color /= pixelSamples*pixelSamples;
+		pixel_color /= settings.pixelSamples*settings.pixelSamples;
 		display_pixel(scanlineNum, x, pixel_color);
 	}
 
@@ -116,54 +116,4 @@ void World::display_pixel(const int row, const int column, const RGBColor& raw_c
 	int y = row;
 
 	screen_buffer[x + (y * g_hres)] = (displayR << 16) + (displayG << 8) + displayB;
-}
-
-
-void World::delete_objects(void) {
-	int num_objects = primitives.size();
-
-	for (int j = 0; j < num_objects; j++) {
-		delete primitives[j];
-		primitives[j] = NULL;
-	}
-
-	primitives.erase(primitives.begin(), primitives.end());
-}
-
-
-void World::delete_lights(void) {
-	int num_lights = lights.size();
-
-	for (int j = 0; j < num_lights; j++) {
-		delete lights[j];
-		lights[j] = NULL;
-	}
-
-    lights.erase(lights.begin(), lights.end());
-}
-
-
-void World::delete_materials(void) {
-    int num_materials = materials.size();
-
-    for (int j = 0; j < num_materials; j++) {
-        delete materials[j];
-        materials[j] = NULL;
-    }
-
-    materials.erase(materials.begin(), materials.end());
-
-}
-
-
-void World::delete_meshDatas(void) {
-    int num_meshDatas = meshDatas.size();
-
-    for (int j = 0; j < num_meshDatas; j++) {
-        delete meshDatas[j];
-        meshDatas[j] = NULL;
-    }
-
-    meshDatas.erase(meshDatas.begin(), meshDatas.end());
-
 }

@@ -1,10 +1,10 @@
 #include "lambertian.h"
 #include "utilities/common.h"
 
-Lambertian::Lambertian(void)
+Lambertian::Lambertian()
     :   AbstractBRDF(),
 		kd(1.0),
-		cd(0.0)
+		cd(0.5)
 {}
 
 

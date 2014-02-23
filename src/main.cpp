@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
 
 /*
 TODO:
- - Optimise grid intersection for shadow rays. eg make use of maxT.
- - Check grid intersection code against scratchapixel.
+ - Check book on how to add indirect.
+ - Make lights hitable in grid only for primary rays.
 
 
  - Implement multi-jittered sampling as recommended by Max.
@@ -34,10 +34,9 @@ TODO:
 
  Basic program flow:
  - World::render_scanline() gets called which calls tracer_ptr->trace_ray() for each subpixel which returns the final subpixel color.
- - trace_ray() calls world_ptr->hit_objects() with the ray direction which goes through each object in the scene calling its hit() function.
- - If an object is hit material_ptr->shade() is called on the closest hit object.
- - material_ptr->shade() then goes through each light adding up the light contributions. To get shadows each light has its in_shadow() function called.
- - Light::in_shadow() goes through each object calling shadow_hit() which returns a bool.
+ - trace_ray() calls accelStruct_ptr->closest_intersection() which returns a shadeRec with data at hitpoint needed for shading.
+ - If an object is hit material_ptr->shade() is called.
+ - material_ptr->shade() then goes through each light adding up the light contributions, calling accelStruct_ptr->shadow_intersection().
 
 
 

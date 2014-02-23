@@ -6,7 +6,7 @@
 class Lambertian: public AbstractBRDF {
 public:
 
-	Lambertian(void);
+	Lambertian();
 
 	virtual RGBColor f(const ShadeRec& sr, const Vector3& wo, const Vector3& wi) const;
 	virtual RGBColor rho(const ShadeRec& sr, const Vector3& wo) const;

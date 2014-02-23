@@ -2,7 +2,7 @@
 #include "lights/abstractlight.h"
 
 
-AbstractLight::AbstractLight(void) :
+AbstractLight::AbstractLight() :
     intensity(1.0),
 	color(1.0),
 	num_samples(1)
