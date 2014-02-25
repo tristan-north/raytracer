@@ -1,5 +1,5 @@
-extern const uint g_hres = 720/4;
-extern const uint g_vres = 576/4;
+extern const uint g_hres = 720/3;
+extern const uint g_vres = 576/3;
 
 void World::build() {
 	settings.pixelSamples = 2;
@@ -9,7 +9,7 @@ void World::build() {
 //    Occlusion* material = new Occlusion;
 //    material->set_numSamples(6);
     Matte* material = new Matte;
-    material->set_kd(1.0);
+	material->set_kd(0.5);
     material->set_cd(RGBColor(1, 1, 1));
     add_material(material);
 
@@ -32,8 +32,8 @@ void World::build() {
 	light_ptr->set_color(1, 1, 1);
 	light_ptr->set_num_samples(4);
 	light_ptr->set_transform(0, 138, 80,   // translate
-							  180, 0, 0,   // rotate
-							  50, 50, 50); // scale
+							 180, 0, 0,   // rotate
+							 50, 50, 50); // scale
 	add_light(light_ptr);
 
 //	EnvLight* envlight_ptr = new EnvLight;

@@ -18,7 +18,6 @@ public:
 
     AbstractTracer(void);
     AbstractTracer(World* _world_ptr);
-    virtual ~AbstractTracer(void);
 
 	virtual RGBColor trace_ray(const Ray ray, uint rayDepth) const;
 

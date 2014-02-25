@@ -21,7 +21,7 @@ RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
 		numSamples = light->get_num_samples();
 
         // For each light sample
-        for (int s = 0; s < numSamples; s++) {
+		for (uint s = 0; s < numSamples; s++) {
             wi = light->get_direction(sr); // The length of wi here is the distance from shading point to light sample.
             double distToLight = wi.length();
             wi.normalize();
@@ -70,5 +70,5 @@ RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
 		}
 	}
 
-    return (finalColor);
+	return finalColor;
 }

@@ -135,22 +135,8 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 	ShadeRec lightSr(world);
 	ShadeRec testSr(world);
 
-	// Get intersection with any lights first, if not a shadow ray.
-	double t;/*
-	if( !isShadowRay ) {
-		lightSr.t = kHugeValue;
-		uint numObjects = world.lights.size();
-		for (uint i = 0; i < numObjects; i++) {
-			if ( world.lights[i]->hit(ray, t, testSr) && (t < lightSr.t)) {
-				lightSr.t = t;
-				lightSr.hit_an_object = true;
-				lightSr.material_ptr = testSr.material_ptr;
-				lightSr.hit_point = ray.o + t * ray.d;
-				lightSr.normal = testSr.normal;
-			}
-		}
-	}
-*/
+	double t;
+
 	double bboxIsecDist = 0;
 	// Check if ray is inside bbox.
 	if( !bbox.inside(ray.o) ) {

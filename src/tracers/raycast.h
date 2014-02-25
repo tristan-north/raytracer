@@ -8,7 +8,6 @@ public:
 
 	RayCast(void);
 	RayCast(World* _worldPtr);
-	virtual	~RayCast(void);
 
 	virtual RGBColor trace_ray(const Ray ray, uint rayDepth) const;
 };

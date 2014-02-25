@@ -20,16 +20,15 @@ int main(int argc, char *argv[])
 
 /*
 TODO:
- - Check book on how to add indirect.
- - Make lights hitable in grid only for primary rays.
-
+ - Check book on how to add indirect and compare to my implementation.
 
  - Implement multi-jittered sampling as recommended by Max.
  - Use Intel IPP for vectors, image manipulation etc.
  - Implement hilbert bucket ordering http://en.wikipedia.org/wiki/Space-filling_curve
  - Implement BVH
- - Add multiple bounces
-
+ - Figure out what to do when an indirect ray would hit a light source.
+ - Create scene description.
+ - Create different materials/brdfs.
 
 
  Basic program flow:
@@ -37,6 +36,7 @@ TODO:
  - trace_ray() calls accelStruct_ptr->closest_intersection() which returns a shadeRec with data at hitpoint needed for shading.
  - If an object is hit material_ptr->shade() is called.
  - material_ptr->shade() then goes through each light adding up the light contributions, calling accelStruct_ptr->shadow_intersection().
+
 
 
 
