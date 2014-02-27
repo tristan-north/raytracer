@@ -30,7 +30,7 @@ void Triangle::compute_normal(const bool reverse_normal) {
 
 
 Normal Triangle::get_normal() const {
-	return (normal);
+	return normal;
 }
 
 
