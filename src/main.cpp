@@ -20,6 +20,9 @@ int main(int argc, char *argv[])
 
 /*
 TODO:
+ - Read in normals from .obj if they exist.
+ - Add normal interpolation to triangle get_normal()
+
  - Check book on how to add indirect and compare to my implementation.
 
  - Implement multi-jittered sampling as recommended by Max.

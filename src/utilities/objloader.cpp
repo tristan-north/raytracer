@@ -67,10 +67,15 @@ int ObjLoader::load(World& world, const string filepath) {
 				int vIndex1 = atoi(numbersAsStrings[i - 1].c_str());
 				int vIndex2 = atoi(numbersAsStrings[i].c_str());
 
+				// Assuming here that there are no normals defined in .obj file, so computing them.
+				Normal normal;
+				compute_normal(meshData->vertices[vIndex0-1], meshData->vertices[vIndex1-1], meshData->vertices[vIndex2-1], normal);
+				meshData->normals.push_back(normal);
+
 				// Need to -1 from the vertex index as in the .obj file they start at 1 not 0.
-				Triangle* t = new Triangle(meshData, vIndex0-1, vIndex1-1, vIndex2-1);
+				Triangle* t = new Triangle(meshData, vIndex0-1, vIndex1-1, vIndex2-1,
+										   meshData->normals.size()-1, meshData->normals.size()-1, meshData->normals.size()-1);
 				world.add_primitive(t);
-				t->compute_normal();
 				t->set_material(materialToAssign);
 
 				numTriangles++;
@@ -121,4 +126,11 @@ vector<string> ObjLoader::getNumbersAsStrings(const string& line) {
 
 	return stringsList;
 }
+
+void ObjLoader::compute_normal(const Point3 &v0, const Point3 &v1, const Point3 &v2, Normal &normal)
+{
+	normal = (v1 - v0) ^ (v2 - v0);
+	normal.normalize();
+}
+
 

@@ -11,11 +11,9 @@ public:
     MeshData();
     ~MeshData();
 
-	std::vector<Point3>		vertices;				// mesh vertices
-//	vector<Normal> 			normals;				// average normal at each vertex;
-//	vector<vector<int> > 	vertex_faces;			// the triangles shared by each vertex
-//	int 					num_vertices; 			// number of vertices
-//	int 					num_triangles; 			// number of triangles
+	std::vector<Point3>		vertices;
+	std::vector<Normal> 	normals;
+
 };
 
 #endif // MESHDATA_H

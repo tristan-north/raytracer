@@ -8,36 +8,38 @@ using namespace std;
 Triangle::Triangle()
     : 	AbstractGeo(),
 		mesh_ptr(0),
-		index0(0), index1(0), index2(0),
-		normal()
+		vIndex0(0), vIndex1(0), vIndex2(0),
+		nIndex0(0), nIndex1(0), nIndex2(0)
 {}
 
-Triangle::Triangle(MeshData* _mesh_ptr, const int i0, const int i1, const int i2)
+Triangle::Triangle(MeshData* _mesh_ptr, const uint v0, const uint v1, const uint v2,
+										const uint n0, const uint n1, const uint n2)
     : 	AbstractGeo(),
         mesh_ptr(_mesh_ptr),
-        index0(i0), index1(i1), index2(i2)
+		vIndex0(v0), vIndex1(v1), vIndex2(v2),
+		nIndex0(n0), nIndex1(n1), nIndex2(n2)
 {}
 
 
-void Triangle::compute_normal(const bool reverse_normal) {
-	normal = (mesh_ptr->vertices[index1] - mesh_ptr->vertices[index0]) ^
-			 (mesh_ptr->vertices[index2] - mesh_ptr->vertices[index0]);
-	normal.normalize();
+//void Triangle::compute_normal(const bool reverse_normal) {
+//	normal = (mesh_ptr->vertices[vIndex1] - mesh_ptr->vertices[vIndex0]) ^
+//			 (mesh_ptr->vertices[vIndex2] - mesh_ptr->vertices[vIndex0]);
+//	normal.normalize();
 
-	if (reverse_normal)
-		normal = -normal;
-}
+//	if (reverse_normal)
+//		normal = -normal;
+//}
 
 
 Normal Triangle::get_normal() const {
-	return normal;
+	return mesh_ptr->normals[nIndex0];
 }
 
 
 BBox Triangle::get_bbox() const {
-	Point3 v1(mesh_ptr->vertices[index0]);
-	Point3 v2(mesh_ptr->vertices[index1]);
-	Point3 v3(mesh_ptr->vertices[index2]);
+	Point3 v1(mesh_ptr->vertices[vIndex0]);
+	Point3 v2(mesh_ptr->vertices[vIndex1]);
+	Point3 v3(mesh_ptr->vertices[vIndex2]);
 
     return(BBox(min(min(v1.x, v2.x), v3.x) - kEpsilon, max(max(v1.x, v2.x), v3.x) + kEpsilon,
                 min(min(v1.y, v2.y), v3.y) - kEpsilon, max(max(v1.y, v2.y), v3.y) + kEpsilon,
@@ -46,9 +48,9 @@ BBox Triangle::get_bbox() const {
 
 
 bool Triangle::hit(const Ray& ray, double& tmin, ShadeRec& sr) const {
-	Point3 v0(mesh_ptr->vertices[index0]);
-	Point3 v1(mesh_ptr->vertices[index1]);
-	Point3 v2(mesh_ptr->vertices[index2]);
+	Point3 v0(mesh_ptr->vertices[vIndex0]);
+	Point3 v1(mesh_ptr->vertices[vIndex1]);
+	Point3 v2(mesh_ptr->vertices[vIndex2]);
 
 	double a = v0.x - v1.x, b = v0.x - v2.x, c = ray.d.x, d = v0.x - ray.o.x;
 	double e = v0.y - v1.y, f = v0.y - v2.y, g = ray.d.y, h = v0.y - ray.o.y;
@@ -85,17 +87,17 @@ bool Triangle::hit(const Ray& ray, double& tmin, ShadeRec& sr) const {
 		return (false);
     }
 
-	tmin 				= t;
-	sr.normal 			= normal;  				// for flat shading
+	tmin = t;
+	sr.normal = get_normal();
 
 	return (true);
 }
 
 
 bool Triangle::shadow_hit(const Ray& ray, double& tmin) const {
-	Point3 v0(mesh_ptr->vertices[index0]);
-	Point3 v1(mesh_ptr->vertices[index1]);
-	Point3 v2(mesh_ptr->vertices[index2]);
+	Point3 v0(mesh_ptr->vertices[vIndex0]);
+	Point3 v1(mesh_ptr->vertices[vIndex1]);
+	Point3 v2(mesh_ptr->vertices[vIndex2]);
 
 	double a = v0.x - v1.x, b = v0.x - v2.x, c = ray.d.x, d = v0.x - ray.o.x;
 	double e = v0.y - v1.y, f = v0.y - v2.y, g = ray.d.y, h = v0.y - ray.o.y;
