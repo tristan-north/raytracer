@@ -9,9 +9,9 @@
 
 using namespace std;
 
-int ObjLoader::load(World& world, const string filepath, const MaterialsList& materialsList) {
-	assert(materialsList.materials.size() > 0);
-	AbstractMaterial* materialToAssign = materialsList.materials[0];
+int ObjLoader::load(World& world, const string filepath) {
+	assert(world.materials.size() > 0);
+	AbstractMaterial* materialToAssign = world.materials[0];
 
 	ifstream file;
 	file.open(filepath.c_str());
@@ -85,10 +85,10 @@ int ObjLoader::load(World& world, const string filepath, const MaterialsList& ma
 		// Process line defining group name.
 		else if( line.at(0) == 'g' ) {
 			string groupName = line.substr(2);
-			materialToAssign = materialsList.materials[0];
-			for( uint i = 0; i < materialsList.assignments.size(); i++ ) {
-				if( materialsList.assignments[i] == groupName ) {
-					materialToAssign = materialsList.materials[i];
+			materialToAssign = world.materials[0];
+			for( uint i = 0; i < world.materials.size(); i++ ) {
+				if( world.materials[i]->assignment == groupName ) {
+					materialToAssign = world.materials[i];
 					break;
 				}
 			}

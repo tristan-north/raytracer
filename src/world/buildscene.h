@@ -16,27 +16,21 @@ void World::build() {
 	Matte* redMaterial = new Matte;
 	redMaterial->set_kd(0.7);
 	redMaterial->set_cd(RGBColor(1, 0, 0));
+	redMaterial->assignment = "wall_left";
 	add_material(redMaterial);
 
 	Matte* greenMaterial = new Matte;
 	greenMaterial->set_kd(0.7);
 	greenMaterial->set_cd(RGBColor(0, 1, 0));
+	greenMaterial->assignment = "wall_right";
 	add_material(greenMaterial);
-
-	MaterialsList materialsList;
-	materialsList.materials.push_back(greyMaterial);
-	materialsList.assignments.push_back("");
-	materialsList.materials.push_back(redMaterial);
-	materialsList.assignments.push_back("wall_left");
-	materialsList.materials.push_back(greenMaterial);
-	materialsList.assignments.push_back("wall_right");
 
 	// Lights
 	RectLight* light_ptr = new RectLight;
 	light_ptr->set_intensity(15);
 	light_ptr->set_color(1, 1, 1);
 	light_ptr->set_num_samples(4);
-	light_ptr->set_transform(0, 138, 80,   // translate
+	light_ptr->set_transform(0, 138, 80,  // translate
 							 180, 0, 0,   // rotate
 							 50, 50, 50); // scale
 	add_light(light_ptr);
@@ -49,12 +43,12 @@ void World::build() {
 	// Camera
 	camera.fov = 40;
 	camera.set_transform(0, 100, -205,  // translate
-						 -7.6, 180, 0);  // rotate
+						 -7.6, 180, 0); // rotate
 	// Load
 	ObjLoader objLoader;
-	if( !objLoader.load(*this, "testModel.obj", materialsList) )
+	if( !objLoader.load(*this, "testModel.obj") )
 		return;
 
 	accelStruct_ptr = new Grid(*this);
-	tracer_ptr = new RayCast(this);
+	tracer_ptr = new RayCast(*this);
 }

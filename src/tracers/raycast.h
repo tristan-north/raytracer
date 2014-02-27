@@ -5,9 +5,7 @@
 
 class RayCast: public AbstractTracer {
 public:
-
-	RayCast(void);
-	RayCast(World* _worldPtr);
+	RayCast(World& _world);
 
 	virtual RGBColor trace_ray(const Ray ray, uint rayDepth) const;
 };

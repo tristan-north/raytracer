@@ -4,25 +4,24 @@
 #include "utilities/shaderec.h"
 #include "materials/abstractmaterial.h"
 
-RayCast::RayCast(void) : AbstractTracer() {}
-RayCast::RayCast(World* _worldPtr) : AbstractTracer(_worldPtr) {}
+RayCast::RayCast(World &_world) : AbstractTracer(_world) {}
 
 RGBColor RayCast::trace_ray(const Ray ray, uint rayDepth) const {
-	if( rayDepth > world_ptr->settings.maxRayDepth )
+	if( rayDepth > world.settings.maxRayDepth )
 		return 0;
 
 	// Get the ShadeRec of the closest intersection of given ray with the world.
-	ShadeRec sr = world_ptr->accelStruct_ptr->closest_intersection(ray);
+	ShadeRec sr = world.accelStruct_ptr->closest_intersection(ray);
 
 	// If a primary ray, test ray against lights.
 	if( rayDepth == 0 ) {
 		double t;
-		ShadeRec lightSr(*world_ptr);
-		ShadeRec testSr(*world_ptr);
+		ShadeRec lightSr(world);
+		ShadeRec testSr(world);
 		lightSr.t = kHugeValue;
-		uint numObjects = world_ptr->lights.size();
+		uint numObjects = world.lights.size();
 		for (uint i = 0; i < numObjects; i++) {
-			if ( world_ptr->lights[i]->hit(ray, t, testSr) && (t < lightSr.t)) {
+			if ( world.lights[i]->hit(ray, t, testSr) && (t < lightSr.t)) {
 				lightSr.t = t;
 				lightSr.hit_an_object = true;
 				lightSr.material_ptr = testSr.material_ptr;
@@ -49,5 +48,5 @@ RGBColor RayCast::trace_ray(const Ray ray, uint rayDepth) const {
 			return RGBColor(1, 0, 0);
 	}
 	else
-		return (world_ptr->background_color);
+		return (world.background_color);
 }

@@ -15,14 +15,12 @@ class World;
 class AbstractTracer
 {
 public:
+	AbstractTracer(World& _world);
 
-    AbstractTracer(void);
-    AbstractTracer(World* _world_ptr);
-
-	virtual RGBColor trace_ray(const Ray ray, uint rayDepth) const;
+	virtual RGBColor trace_ray(const Ray ray, uint rayDepth) const = 0;
 
 protected:
-	World* world_ptr;
+	World& world;
 };
 
 #endif // ABSTRACTTRACER_H
