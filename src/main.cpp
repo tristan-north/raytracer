@@ -29,6 +29,7 @@ TODO:
  - Figure out what to do when an indirect ray would hit a light source.
  - Create scene description.
  - Create different materials/brdfs.
+ - Smooth normals
 
 
  Basic program flow:

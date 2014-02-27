@@ -7,15 +7,19 @@
 
 using std::string;
 
+struct MaterialsList {
+	vector<string> assignments;
+	vector<AbstractMaterial*> materials;
+};
+
 class ObjLoader
 {
 public:
-    ObjLoader();
-    int load(World&  world, const string filepath, AbstractMaterial *material);  // Allocates a new MeshData object and adds triangles world.
+	int load(World& world, const string filepath, const MaterialsList& materialsList);
 
 private:
 	// Takes a line from the .obj file and returns the numbers in that line as strings.
-	vector<string> getNumbersAsStrings(const string& line);
+	static vector<string> getNumbersAsStrings(const string& line);
 
 };
 

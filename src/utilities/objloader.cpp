@@ -1,6 +1,7 @@
 #include <QtGlobal>
 #include <fstream>
 #include <assert.h>
+#include <QDebug>
 #include "objloader.h"
 #include "geometricObjects/triangle.h"
 #include "utilities/meshdata.h"
@@ -8,10 +9,10 @@
 
 using namespace std;
 
-ObjLoader::ObjLoader() {}
+int ObjLoader::load(World& world, const string filepath, const MaterialsList& materialsList) {
+	assert(materialsList.materials.size() > 0);
+	AbstractMaterial* materialToAssign = materialsList.materials[0];
 
-
-int ObjLoader::load(World& world, const string filepath, AbstractMaterial* material) {
 	ifstream file;
 	file.open(filepath.c_str());
 
@@ -33,7 +34,7 @@ int ObjLoader::load(World& world, const string filepath, AbstractMaterial* mater
 		if( line.length() < 1 )
 			continue;
 
-		// Process lines defining vertices.
+		// Process line defining vertices.
 		if( line.at(0) == 'v') {
             if( line.at(1) == 't') {  // This is UV coord, ignore for now.
                 continue;
@@ -52,7 +53,7 @@ int ObjLoader::load(World& world, const string filepath, AbstractMaterial* mater
 //			qDebug("(%.3f, %.3f, %.3f)", v0, v1, v2);
 			meshData->vertices.push_back(Point3(v0, v1, v2));
 		}
-		// Process lines defining faces.
+		// Process line defining faces.
 		else if( line.at(0) == 'f' ) {
 			numbersAsStrings = getNumbersAsStrings(line);
 
@@ -70,7 +71,7 @@ int ObjLoader::load(World& world, const string filepath, AbstractMaterial* mater
 				Triangle* t = new Triangle(meshData, vIndex0-1, vIndex1-1, vIndex2-1);
 				world.add_primitive(t);
 				t->compute_normal();
-                t->set_material(material);
+				t->set_material(materialToAssign);
 
 				numTriangles++;
 
@@ -79,6 +80,17 @@ int ObjLoader::load(World& world, const string filepath, AbstractMaterial* mater
 //					   meshData->vertices[vIndex0-1].x, meshData->vertices[vIndex0-1].y, meshData->vertices[vIndex0-1].z,
 //					   meshData->vertices[vIndex1-1].x, meshData->vertices[vIndex1-1].y, meshData->vertices[vIndex1-1].z,
 //					   meshData->vertices[vIndex2-1].x, meshData->vertices[vIndex2-1].y, meshData->vertices[vIndex2-1].z);
+			}
+		}
+		// Process line defining group name.
+		else if( line.at(0) == 'g' ) {
+			string groupName = line.substr(2);
+			materialToAssign = materialsList.materials[0];
+			for( uint i = 0; i < materialsList.assignments.size(); i++ ) {
+				if( materialsList.assignments[i] == groupName ) {
+					materialToAssign = materialsList.materials[i];
+					break;
+				}
 			}
 		}
 	}

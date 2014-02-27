@@ -2,31 +2,36 @@ extern const uint g_hres = 720/3;
 extern const uint g_vres = 576/3;
 
 void World::build() {
-	settings.pixelSamples = 2;
-	settings.maxRayDepth = 1;
-	settings.indirectSamples = 4;
+	// Settings
+	settings.pixelSamples = 1;
+	settings.maxRayDepth = 2;
+	settings.indirectSamples = 2;
 
-//    Occlusion* material = new Occlusion;
-//    material->set_numSamples(6);
-    Matte* material = new Matte;
-	material->set_kd(0.5);
-    material->set_cd(RGBColor(1, 1, 1));
-    add_material(material);
+	// Materials
+	Matte* greyMaterial = new Matte;
+	greyMaterial->set_kd(0.7);
+	greyMaterial->set_cd(RGBColor(1, 1, 1));
+	add_material(greyMaterial);
 
+	Matte* redMaterial = new Matte;
+	redMaterial->set_kd(0.7);
+	redMaterial->set_cd(RGBColor(1, 0, 0));
+	add_material(redMaterial);
 
-    ObjLoader objLoader;
-    if( !objLoader.load(*this, "testModel.obj", material) )
-        return;
+	Matte* greenMaterial = new Matte;
+	greenMaterial->set_kd(0.7);
+	greenMaterial->set_cd(RGBColor(0, 1, 0));
+	add_material(greenMaterial);
 
-	accelStruct_ptr = new Grid(*this);
-	tracer_ptr = new RayCast(this);
+	MaterialsList materialsList;
+	materialsList.materials.push_back(greyMaterial);
+	materialsList.assignments.push_back("");
+	materialsList.materials.push_back(redMaterial);
+	materialsList.assignments.push_back("wall_left");
+	materialsList.materials.push_back(greenMaterial);
+	materialsList.assignments.push_back("wall_right");
 
-	// camera
-	camera.fov = 40;
-	camera.set_transform(0, 100, -205,  // translate
-						 -7.6, 180, 0);  // rotate
-
-	// lights
+	// Lights
 	RectLight* light_ptr = new RectLight;
 	light_ptr->set_intensity(15);
 	light_ptr->set_color(1, 1, 1);
@@ -40,4 +45,16 @@ void World::build() {
 //	envlight_ptr->set_intensity(0.5);
 //	envlight_ptr->set_num_samples(16);
 //	add_light(envlight_ptr);
+
+	// Camera
+	camera.fov = 40;
+	camera.set_transform(0, 100, -205,  // translate
+						 -7.6, 180, 0);  // rotate
+	// Load
+	ObjLoader objLoader;
+	if( !objLoader.load(*this, "testModel.obj", materialsList) )
+		return;
+
+	accelStruct_ptr = new Grid(*this);
+	tracer_ptr = new RayCast(this);
 }
