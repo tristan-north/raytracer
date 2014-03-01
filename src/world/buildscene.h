@@ -1,11 +1,11 @@
-extern const uint g_hres = 720/3;
-extern const uint g_vres = 576/3;
+extern const uint g_hres = 720/2;
+extern const uint g_vres = 576/2;
 
 void World::build() {
 	// Settings
-	settings.pixelSamples = 1;
+	settings.pixelSamples = 3;
 	settings.maxRayDepth = 2;
-	settings.indirectSamples = 2;
+	settings.indirectSamples = 4;
 
 	// Materials
 	Matte* greyMaterial = new Matte;
@@ -27,12 +27,12 @@ void World::build() {
 
 	// Lights
 	RectLight* light_ptr = new RectLight;
-	light_ptr->set_intensity(15);
+	light_ptr->set_intensity(7);
 	light_ptr->set_color(1, 1, 1);
 	light_ptr->set_num_samples(4);
 	light_ptr->set_transform(0, 138, 80,  // translate
 							 180, 0, 0,   // rotate
-							 50, 50, 50); // scale
+							 100, 100, 100); // scale
 	add_light(light_ptr);
 
 //	EnvLight* envlight_ptr = new EnvLight;
@@ -42,11 +42,14 @@ void World::build() {
 
 	// Camera
 	camera.fov = 40;
+//	camera.set_transform(-32.317, 9.23, -113.608,  // translate
+//						 5.062, 187.8, 0); // rotate
 	camera.set_transform(0, 100, -205,  // translate
 						 -7.6, 180, 0); // rotate
-	// Load
-	ObjLoader objLoader;
-	if( !objLoader.load(*this, "testModel.obj") )
+
+
+	// Load geo
+	if( !ObjLoader::load(*this, "testModel.obj") )
 		return;
 
 	accelStruct_ptr = new Grid(*this);

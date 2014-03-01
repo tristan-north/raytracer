@@ -15,7 +15,7 @@ public:
 	Grid(World &w);
 	~Grid();
 
-	virtual ShadeRec closest_intersection(const Ray& ray);
+	virtual void closest_intersection(ShadeRec& sr);
 	virtual bool shadow_intersection(const Ray& ray, double distToLight);
 
 private:
@@ -25,7 +25,7 @@ private:
 	struct {uint x; uint y; uint z;} gridRes;
 
 	Cell* get_cell(int x, int y, int z);
-	bool intersect(ShadeRec& returnSr, const Ray& ray, const bool isShadowRay, const double maxT);
+	bool intersect(ShadeRec& sr, const bool isShadowRay, const double maxT);
 };
 
 
@@ -33,7 +33,7 @@ class Cell
 {
 public:
 	void addPrimitive(AbstractGeo* primitive);
-	bool intersectPrimitives(const Ray& ray, ShadeRec& returnSr, ShadeRec& testSr);
+	bool intersectPrimitives(ShadeRec& sr, ShadeRec& testSr);
 	std::vector<AbstractGeo*> primitives;
 };
 

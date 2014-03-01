@@ -21,21 +21,6 @@ Triangle::Triangle(MeshData* _mesh_ptr, const uint v0, const uint v1, const uint
 {}
 
 
-//void Triangle::compute_normal(const bool reverse_normal) {
-//	normal = (mesh_ptr->vertices[vIndex1] - mesh_ptr->vertices[vIndex0]) ^
-//			 (mesh_ptr->vertices[vIndex2] - mesh_ptr->vertices[vIndex0]);
-//	normal.normalize();
-
-//	if (reverse_normal)
-//		normal = -normal;
-//}
-
-
-Normal Triangle::get_normal() const {
-	return mesh_ptr->normals[nIndex0];
-}
-
-
 BBox Triangle::get_bbox() const {
 	Point3 v1(mesh_ptr->vertices[vIndex0]);
 	Point3 v2(mesh_ptr->vertices[vIndex1]);
@@ -65,7 +50,7 @@ bool Triangle::hit(const Ray& ray, double& tmin, ShadeRec& sr) const {
 	double beta = e1 * inv_denom;
 
     if (beta < 0.0) {
-		return (false);
+		return false;
     }
 
 	double r = e * l - h * i;
@@ -73,24 +58,28 @@ bool Triangle::hit(const Ray& ray, double& tmin, ShadeRec& sr) const {
 	double gamma = e2 * inv_denom;
 
     if (gamma < 0.0) {
-		return (false);
+		return false;
     }
 
     if (beta + gamma > 1.0) {
-		return (false);
+		return false;
     }
 
 	double e3 = a * p - b * r + d * s;
 	double t = e3 * inv_denom;
 
     if (t < kEpsilon) {
-		return (false);
+		return false;
     }
 
 	tmin = t;
-	sr.normal = get_normal();
 
-	return (true);
+	// Interpolate normal
+	sr.normal = beta * mesh_ptr->normals[nIndex1] +
+				gamma * mesh_ptr->normals[nIndex2] +
+				(1 - beta - gamma) * mesh_ptr->normals[nIndex0];
+
+	return true;
 }
 
 
@@ -112,7 +101,7 @@ bool Triangle::shadow_hit(const Ray& ray, double& tmin) const {
 	double beta = e1 * inv_denom;
 
     if (beta < 0.0) {
-		return (false);
+		return false;
     }
 
 	double r = e * l - h * i;
@@ -120,21 +109,21 @@ bool Triangle::shadow_hit(const Ray& ray, double& tmin) const {
 	double gamma = e2 * inv_denom;
 
     if (gamma < 0.0 ) {
-		return (false);
+		return false;
     }
 
     if (beta + gamma > 1.0) {
-		return (false);
+		return false;
     }
 
 	double e3 = a * p - b * r + d * s;
 	double t = e3 * inv_denom;
 
     if (t < kEpsilon) {
-		return (false);
+		return false;
     }
 
 	tmin = t;
 
-	return (true);
+	return true;
 }

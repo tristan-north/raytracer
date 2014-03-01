@@ -47,9 +47,9 @@ Grid::Grid(World& w) : AbstractAccel(w)
 
 	const double resScaleFactor = cbrt(lambda * w.primitives.size() / gridVolume);
 
-	gridRes.x = gridSize.x * resScaleFactor;
-	gridRes.y = gridSize.y * resScaleFactor;
-	gridRes.z = gridSize.z * resScaleFactor;
+	gridRes.x = max(gridSize.x * resScaleFactor, 1.0);
+	gridRes.y = max(gridSize.y * resScaleFactor, 1.0);
+	gridRes.z = max(gridSize.z * resScaleFactor, 1.0);
 
 	qDebug("Grid resolution: %dx%dx%d", gridRes.x, gridRes.y, gridRes.z);
 
@@ -102,16 +102,14 @@ Grid::~Grid()
 }
 
 
-ShadeRec Grid::closest_intersection(const Ray &ray)
+void Grid::closest_intersection(ShadeRec &sr)
 {
 	timespec tp;
 	Timer::getTime(tp);
 
-	ShadeRec sr(world);
-	intersect(sr, ray, false, NULL);
+	intersect(sr, false, NULL);
 
 	closestIsectTimer.add(tp);
-	return sr;
 }
 
 
@@ -120,7 +118,8 @@ bool Grid::shadow_intersection(const Ray& ray, double distToLight) {
 	Timer::getTime(tp);
 
 	ShadeRec sr(world);
-	intersect(sr, ray, true, distToLight);
+	sr.ray = ray;
+	intersect(sr, true, distToLight);
 
 	shadowIsectTimer.add(tp);
 
@@ -131,10 +130,9 @@ bool Grid::shadow_intersection(const Ray& ray, double distToLight) {
 }
 
 
-bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay, const double maxT) {
-	ShadeRec lightSr(world);
+bool Grid::intersect(ShadeRec &sr, const bool isShadowRay, const double maxT) {
 	ShadeRec testSr(world);
-
+	Ray ray = sr.ray;
 	double t;
 
 	double bboxIsecDist = 0;
@@ -143,8 +141,7 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 		// If not inside find if and where ray hits grid bbox. If it misses just return
 		// whatever light was hit (if no lights were hit lightSr will be empty).
 		if( !bbox.hit(ray, bboxIsecDist) ) {
-			returnSr = lightSr;
-			return returnSr.hit_an_object;
+			return false;
 		}
 	}
 
@@ -192,7 +189,7 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 	while(true) {
 		// Intersect the primitives in the current cell.
 		cell = get_cell(cellIndex.x, cellIndex.y, cellIndex.z);
-		cell->intersectPrimitives(ray, returnSr, testSr);
+		cell->intersectPrimitives(sr, testSr);
 
 		// Move variables to next cell.
 		if( tx <= ty && tx <= tz ) {
@@ -214,8 +211,8 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 
 		// If have intersected a primitive and the intersection distance is
 		// less than the distance to the next cell, we've found the closest so break.
-		if( returnSr.hit_an_object ) {
-			if( (returnSr.t-bboxIsecDist) < t )
+		if( sr.hit_an_object ) {
+			if( (sr.t-bboxIsecDist) < t )
 				break;
 		}
 
@@ -226,13 +223,7 @@ bool Grid::intersect(ShadeRec &returnSr, const Ray& ray, const bool isShadowRay,
 			break;
 	}
 
-	// If a light hit was closer, return that instead.
-	if( lightSr.hit_an_object ) {
-		if( lightSr.t < returnSr.t )
-			returnSr = lightSr;
-	}
-
-	return returnSr.hit_an_object;
+	return sr.hit_an_object;
 }
 
 /*
@@ -306,23 +297,23 @@ void Cell::addPrimitive(AbstractGeo *primitive)
 	primitives.push_back(primitive);
 }
 
-bool Cell::intersectPrimitives(const Ray &ray, ShadeRec &returnSr, ShadeRec &testSr)
+bool Cell::intersectPrimitives(ShadeRec &sr, ShadeRec &testSr)
 {
-	returnSr.t = kHugeValue;
+	sr.t = kHugeValue;
 
 	// Test intersection of each primitive and keep the ShadeRec
 	// of the closest intersection.
 	uint numPrim = primitives.size();
 	double testT;
 	for (uint i = 0; i < numPrim; i++) {
-		if ( primitives[i]->hit(ray, testT, testSr) && (testT < returnSr.t)) {
-			returnSr.t = testT;
-			returnSr.hit_an_object = true;
-			returnSr.material_ptr = primitives[i]->get_material();
-			returnSr.hit_point = ray.o + testT * ray.d;
-			returnSr.normal = testSr.normal;
+		if ( primitives[i]->hit(sr.ray, testT, testSr) && (testT < sr.t)) {
+			sr.t = testT;
+			sr.hit_an_object = true;
+			sr.material_ptr = primitives[i]->get_material();
+			sr.hit_point = sr.ray.o + testT * sr.ray.d;
+			sr.normal = testSr.normal;
 		}
 	}
 
-	return returnSr.hit_an_object;
+	return sr.hit_an_object;
 }

@@ -20,19 +20,17 @@ int main(int argc, char *argv[])
 
 /*
 TODO:
- - Read in normals from .obj if they exist.
- - Add normal interpolation to triangle get_normal()
-
  - Check book on how to add indirect and compare to my implementation.
 
- - Implement multi-jittered sampling as recommended by Max.
- - Use Intel IPP for vectors, image manipulation etc.
- - Implement hilbert bucket ordering http://en.wikipedia.org/wiki/Space-filling_curve
- - Implement BVH
- - Figure out what to do when an indirect ray would hit a light source.
- - Create scene description.
+ - Refactor material system - create one uber material which blends different bsdfs.
  - Create different materials/brdfs.
- - Smooth normals
+ - Create scene description.
+ - Figure out what to do when an indirect ray would hit a light source (return black?).
+ - Create debug render modes like CPU time spend per pixel/normals etc.
+ - Implement hilbert bucket ordering http://en.wikipedia.org/wiki/Space-filling_curve
+ - Implement multi-jittered sampling as recommended by Max.
+ - Implement BVH
+ - Use Intel IPP for vectors, image manipulation etc.
 
 
  Basic program flow:

@@ -11,7 +11,9 @@ RGBColor RayCast::trace_ray(const Ray ray, uint rayDepth) const {
 		return 0;
 
 	// Get the ShadeRec of the closest intersection of given ray with the world.
-	ShadeRec sr = world.accelStruct_ptr->closest_intersection(ray);
+	ShadeRec sr(world);
+	sr.ray = ray;
+	world.accelStruct_ptr->closest_intersection(sr);
 
 	// If a primary ray, test ray against lights.
 	if( rayDepth == 0 ) {
@@ -36,6 +38,10 @@ RGBColor RayCast::trace_ray(const Ray ray, uint rayDepth) const {
 	}
 
 	if (sr.hit_an_object) {
+		// If we're seeing the backface, flip the normal.
+		if( sr.normal * -ray.d < 0.0)
+			sr.normal = -sr.normal;
+
 		// u, v, w is used later to transform from shader to world space.
 		sr.v = sr.normal;
 		sr.w = sr.v ^ Vector3(0.0072, 1.0, 0.0034);     // Jitter up vector in case normal is vertical

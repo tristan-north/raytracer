@@ -11,7 +11,7 @@ public:
 	AbstractAccel(World& w);
 	virtual ~AbstractAccel() {}
 
-	virtual ShadeRec closest_intersection(const Ray& ray) = 0;
+	virtual void closest_intersection(ShadeRec& sr) = 0;
 	virtual bool shadow_intersection(const Ray& ray, double distToLight) = 0;
 
 	World& world;

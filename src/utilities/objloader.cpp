@@ -2,6 +2,7 @@
 #include <fstream>
 #include <assert.h>
 #include <QDebug>
+#include <algorithm>
 #include "objloader.h"
 #include "geometricObjects/triangle.h"
 #include "utilities/meshdata.h"
@@ -31,60 +32,72 @@ int ObjLoader::load(World& world, const string filepath) {
 	vector<string> numbersAsStrings;
 	while( file.good() ) {
 		getline(file, line);
-		if( line.length() < 1 )
+		if( line.length() < 4 )
 			continue;
 
-		// Process line defining vertices.
-		if( line.at(0) == 'v') {
-            if( line.at(1) == 't') {  // This is UV coord, ignore for now.
-                continue;
-            }
-            if( line.at(1) == 'n') {  // This is normal, ignore for now.
-                continue;
-            }
-
+		// Process line defining vertex.
+		if( line.at(0) == 'v' && line.at(1) == ' ') {
 			numbersAsStrings = getNumbersAsStrings(line);
 			assert(numbersAsStrings.size() == 3);
 
-			float v0 = atof(numbersAsStrings[0].c_str());
-			float v1 = atof(numbersAsStrings[1].c_str());
-			float v2 = atof(numbersAsStrings[2].c_str());
+			float x = atof(numbersAsStrings[0].c_str());
+			float y = atof(numbersAsStrings[1].c_str());
+			float z = atof(numbersAsStrings[2].c_str());
 
-//			qDebug("(%.3f, %.3f, %.3f)", v0, v1, v2);
-			meshData->vertices.push_back(Point3(v0, v1, v2));
+			meshData->vertices.push_back(Point3(x, y, z));
 		}
-		// Process line defining faces.
-		else if( line.at(0) == 'f' ) {
-			numbersAsStrings = getNumbersAsStrings(line);
 
+		// Process line defining normal.
+		else if( line.at(0) == 'v' && line.at(1) == 'n') {
+			numbersAsStrings = getNumbersAsStrings(line);
+			assert(numbersAsStrings.size() == 3);
+
+			float x = atof(numbersAsStrings[0].c_str());
+			float y = atof(numbersAsStrings[1].c_str());
+			float z = atof(numbersAsStrings[2].c_str());
+
+			meshData->normals.push_back(Normal(x, y, z));
+		}
+		// Process line defining face.
+		else if( line.at(0) == 'f' ) {
+			// Need to -1 from indicies in obj file as they start at 1 not 0.
+			uint vIndex0, vIndex1, vIndex2, nIndex0, nIndex1, nIndex2 = 0;
+			numbersAsStrings = getNumbersAsStrings(line);
 			assert(numbersAsStrings.size() > 2);
 
-			int vIndex0 = atoi(numbersAsStrings[0].c_str());
+			// If face defined contains normal index.
+			bool normalIsDefined = false;
+			if( count(numbersAsStrings[0].begin(), numbersAsStrings[0].end(), '/') == 2) {
+				normalIsDefined = true;
+			}
+
+			vIndex0 = atoi(numbersAsStrings[0].c_str())-1;
+			if(normalIsDefined) nIndex0 = getNormalIndexFromString(numbersAsStrings[0])-1;
 
 			// Need to account for faces defined by more than 3 verts and convert
-			// them to triangles. Number of triangles created is number of verts - 2.
+			// them to triangles. Number of triangles created is number of verts -2.
 			for( size_t i = 2; i < numbersAsStrings.size(); i++ ) {
-				int vIndex1 = atoi(numbersAsStrings[i - 1].c_str());
-				int vIndex2 = atoi(numbersAsStrings[i].c_str());
+				vIndex1 = atoi(numbersAsStrings[i - 1].c_str())-1;
+				vIndex2 = atoi(numbersAsStrings[i].c_str())-1;
 
-				// Assuming here that there are no normals defined in .obj file, so computing them.
-				Normal normal;
-				compute_normal(meshData->vertices[vIndex0-1], meshData->vertices[vIndex1-1], meshData->vertices[vIndex2-1], normal);
-				meshData->normals.push_back(normal);
+				if(normalIsDefined) {
+					nIndex1 = getNormalIndexFromString(numbersAsStrings[i - 1])-1;
+					nIndex2 = getNormalIndexFromString(numbersAsStrings[i])-1;
+				}
+				else {
+					Normal normal;
+					computeNormal(meshData->vertices[vIndex0], meshData->vertices[vIndex1], meshData->vertices[vIndex2], normal);
+					meshData->normals.push_back(normal);
 
-				// Need to -1 from the vertex index as in the .obj file they start at 1 not 0.
-				Triangle* t = new Triangle(meshData, vIndex0-1, vIndex1-1, vIndex2-1,
-										   meshData->normals.size()-1, meshData->normals.size()-1, meshData->normals.size()-1);
+					nIndex0 = nIndex1 = nIndex2 = meshData->normals.size()-1;
+				}
+
+				Triangle* t = new Triangle(meshData, vIndex0, vIndex1, vIndex2,
+													 nIndex0, nIndex1, nIndex2);
 				world.add_primitive(t);
 				t->set_material(materialToAssign);
 
 				numTriangles++;
-
-//				qDebug("Added face with vertex indices: [%d][%d][%d]", vIndex0, vIndex1, vIndex2);
-//				qDebug("(%.2f, %.2f, %.2f) (%.2f, %.2f, %.2f) (%.2f, %.2f, %.2f)",
-//					   meshData->vertices[vIndex0-1].x, meshData->vertices[vIndex0-1].y, meshData->vertices[vIndex0-1].z,
-//					   meshData->vertices[vIndex1-1].x, meshData->vertices[vIndex1-1].y, meshData->vertices[vIndex1-1].z,
-//					   meshData->vertices[vIndex2-1].x, meshData->vertices[vIndex2-1].y, meshData->vertices[vIndex2-1].z);
 			}
 		}
 		// Process line defining group name.
@@ -107,9 +120,7 @@ int ObjLoader::load(World& world, const string filepath) {
 }
 
 vector<string> ObjLoader::getNumbersAsStrings(const string& line) {
-//	qDebug("%s", line.c_str());
-
-	int indexStart = 1;
+	int indexStart = line.find(' ');
 	int indexEnd;
 	vector<string> stringsList;
 	while(true) {
@@ -119,7 +130,6 @@ vector<string> ObjLoader::getNumbersAsStrings(const string& line) {
 
 		indexEnd = line.find(' ', indexStart);
 		stringsList.push_back(line.substr(indexStart, indexEnd - indexStart));
-//		qDebug("%s", stringsList.back().c_str());
 
 		indexStart = indexEnd;
 	}
@@ -127,10 +137,14 @@ vector<string> ObjLoader::getNumbersAsStrings(const string& line) {
 	return stringsList;
 }
 
-void ObjLoader::compute_normal(const Point3 &v0, const Point3 &v1, const Point3 &v2, Normal &normal)
-{
+void ObjLoader::computeNormal(const Point3 &v0, const Point3 &v1, const Point3 &v2, Normal &normal) {
 	normal = (v1 - v0) ^ (v2 - v0);
 	normal.normalize();
+}
+
+uint ObjLoader::getNormalIndexFromString(const string &str)
+{
+	return atoi(str.substr(str.find_last_of('/') + 1).c_str());
 }
 
 

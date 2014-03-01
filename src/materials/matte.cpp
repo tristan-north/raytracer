@@ -12,13 +12,14 @@ RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
     Ray shadowRay;
     shadowRay.o = sr.hit_point;
     AbstractLight* light;
+	World& world = sr.world;
 	int numLights = sr.world.lights.size();
 	uint numSamples;
 
 	// Get illumination from each light.
     for (int j = 0; j < numLights; j++) {
-		light = sr.world.lights[j];
-		numSamples = light->get_num_samples();
+		light = world.lights[j];
+		numSamples = light->get_num_samples()*light->get_num_samples();
 
         // For each light sample
 		for (uint s = 0; s < numSamples; s++) {
@@ -26,13 +27,14 @@ RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
             double distToLight = wi.length();
             wi.normalize();
 
-			float ndotwi = sr.normal * wi;
+			float ndotwi;
+			ndotwi = sr.normal * wi;
 
 			if (ndotwi > 0.0) {
                 bool in_shadow;
                 shadowRay.d = wi;
                 // Intersection test for geo between shading point and light sample.
-				in_shadow = sr.world.accelStruct_ptr->shadow_intersection(shadowRay, distToLight);
+				in_shadow = world.accelStruct_ptr->shadow_intersection(shadowRay, distToLight);
                 __sync_add_and_fetch(&g_numLightRays, 1);
 
 				if (!in_shadow) {
@@ -51,7 +53,7 @@ RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
 	// keep number of samples at 1 so that the number of indirect rays doesn't multiply
 	// for each bounce.
 	if( rayDepth < 1 )
-		numSamples = sr.world.settings.indirectSamples*sr.world.settings.indirectSamples;
+		numSamples = world.settings.indirectSamples*world.settings.indirectSamples;
 	else
 		numSamples = 1;
 
@@ -65,7 +67,7 @@ RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
 		float ndotwi = sr.normal * indirectRay.d;
 
 		if (ndotwi > 0.0) {
-			indirectColor = sr.world.tracer_ptr->trace_ray(indirectRay, rayDepth + 1);
+			indirectColor = world.tracer_ptr->trace_ray(indirectRay, rayDepth + 1);
 			finalColor += indirectColor * diffuse_brdf.f(sr, wo, indirectRay.d) * ndotwi / (invPI * (sr.normal*indirectRay.d)) / numSamples;
 		}
 	}
