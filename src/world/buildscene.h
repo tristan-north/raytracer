@@ -1,9 +1,9 @@
-extern const uint g_hres = 720/3;
-extern const uint g_vres = 576/3;
+extern const uint g_hres = 720/2;
+extern const uint g_vres = 576/2;
 
 void World::build() {
 	// Settings
-	settings.pixelSamples = 2;
+	settings.pixelSamples = 4;
 	settings.maxRayDepth = 2;
 	settings.indirectSamples = 2;
 
