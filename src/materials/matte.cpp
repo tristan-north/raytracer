@@ -5,7 +5,7 @@ extern ulong g_numLightRays;
 Matte::Matte () : AbstractMaterial()
 {}
 
-RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
+RGBColor Matte::evaluate(ShadeRec& sr, uint rayDepth) {
     Vector3 wo = -sr.ray.d;
     Vector3 wi;
     RGBColor finalColor	= 0;
@@ -27,10 +27,9 @@ RGBColor Matte::shade(ShadeRec& sr, uint rayDepth) {
             double distToLight = wi.length();
             wi.normalize();
 
-			float ndotwi;
-			ndotwi = sr.normal * wi;
+			float ndotwi = sr.normal * wi;
 
-			if (ndotwi > 0.0) {
+			if (ndotwi > 0.0) {		// If light is hitting the side of the surface we see.
                 bool in_shadow;
                 shadowRay.d = wi;
                 // Intersection test for geo between shading point and light sample.

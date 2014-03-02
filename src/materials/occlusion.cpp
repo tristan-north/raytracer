@@ -14,7 +14,7 @@ void Occlusion::set_numSamples(int n)
 }
 
 
-RGBColor Occlusion::shade(ShadeRec &sr, uint rayDepth)
+RGBColor Occlusion::evaluate(ShadeRec &sr, uint rayDepth)
 {
     float totalContribution = 0;
     Ray shadowRay;

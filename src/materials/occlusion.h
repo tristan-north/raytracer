@@ -9,7 +9,7 @@ public:
     Occlusion();
 
     void set_numSamples(int n);
-	virtual RGBColor shade(ShadeRec& sr, uint rayDepth);
+	virtual RGBColor evaluate(ShadeRec& sr, uint rayDepth);
 
 private:
     int numSamples;

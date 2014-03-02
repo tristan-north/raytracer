@@ -49,7 +49,7 @@ RGBColor RayCast::trace_ray(const Ray ray, uint rayDepth) const {
 		sr.u = sr.w ^ sr.v;
 
 		if( sr.material_ptr )
-			return (sr.material_ptr->shade(sr, rayDepth));
+			return (sr.material_ptr->evaluate(sr, rayDepth));
 		else
 			return RGBColor(1, 0, 0);
 	}

@@ -7,6 +7,7 @@
 #include "lights/rectlight.h"
 #include "lights/envlight.h"
 #include "materials/matte.h"
+#include "materials/mirror.h"
 #include "materials/occlusion.h"
 #include "utilities/bbox.h"
 #include "utilities/meshdata.h"

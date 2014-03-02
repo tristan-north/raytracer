@@ -31,7 +31,8 @@ HEADERS += \
     utilities/timer.h \
     world/buildscene.h \
     accelerators/abstractaccel.h \
-    accelerators/grid.h
+    accelerators/grid.h \
+    materials/mirror.h
 
 SOURCES += \
     window.cpp \
@@ -65,6 +66,7 @@ SOURCES += \
     lights/envlight.cpp \
     utilities/timer.cpp \
     accelerators/abstractaccel.cpp \
-    accelerators/grid.cpp
+    accelerators/grid.cpp \
+    materials/mirror.cpp
 
 OTHER_FILES +=

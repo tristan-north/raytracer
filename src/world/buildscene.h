@@ -3,9 +3,9 @@ extern const uint g_vres = 576/3;
 
 void World::build() {
 	// Settings
-	settings.pixelSamples = 1;
-	settings.maxRayDepth = 0;
-	settings.indirectSamples = 3;
+	settings.pixelSamples = 2;
+	settings.maxRayDepth = 2;
+	settings.indirectSamples = 2;
 
 	// Materials
 	Matte* greyMaterial = new Matte;
@@ -25,6 +25,10 @@ void World::build() {
 	greenMaterial->assignment = "wall_right";
 	add_material(greenMaterial);
 
+	Mirror* mirror = new Mirror;
+	mirror->assignment = "pSphere1";
+	add_material(mirror);
+
 	// Lights
 	RectLight* light_ptr = new RectLight;
 	light_ptr->set_intensity(7);
@@ -42,8 +46,6 @@ void World::build() {
 
 	// Camera
 	camera.fov = 40;
-//	camera.set_transform(-32.317, 9.23, -113.608,  // translate
-//						 5.062, 187.8, 0); // rotate
 	camera.set_transform(0, 100, -205,  // translate
 						 -7.6, 180, 0); // rotate
 

@@ -3,6 +3,6 @@
 
 AbstractMaterial::AbstractMaterial(): assignment("") {}
 
-RGBColor AbstractMaterial::shade(ShadeRec& sr, uint rayDepth) {
+RGBColor AbstractMaterial::evaluate(ShadeRec& sr, uint rayDepth) {
 	return (0);
 }

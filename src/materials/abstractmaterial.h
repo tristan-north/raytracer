@@ -11,7 +11,7 @@ class AbstractMaterial
 public:
 
 	AbstractMaterial();
-	virtual RGBColor shade(ShadeRec& sr, uint rayDepth);
+	virtual RGBColor evaluate(ShadeRec& sr, uint rayDepth);
 	std::string assignment;
 };
 
