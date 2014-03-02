@@ -61,7 +61,7 @@ int ObjLoader::load(World& world, const string filepath) {
 		// Process line defining face.
 		else if( line.at(0) == 'f' ) {
 			// Need to -1 from indicies in obj file as they start at 1 not 0.
-			uint vIndex0, vIndex1, vIndex2, nIndex0, nIndex1, nIndex2 = 0;
+			uint vIndex0=0, vIndex1=0, vIndex2=0, nIndex0=0, nIndex1=0, nIndex2=0;
 			numbersAsStrings = getNumbersAsStrings(line);
 			assert(numbersAsStrings.size() > 2);
 

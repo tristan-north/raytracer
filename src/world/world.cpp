@@ -59,8 +59,12 @@ void World::render_scanline(int scanlineNum) {
 
 	ray.o = camera.get_eye_pos();
 
+//	timespec pixelTime;
+
 	for (uint x = 0; x < g_hres; x++) {
 		pixel_color = 0;
+
+//		Timer::getTime(pixelTime);
 
 		for (uint p = 0; p < settings.pixelSamples; p++)			// up sub pixel
 			for (uint q = 0; q < settings.pixelSamples; q++) {	// across sub pixel
@@ -88,9 +92,11 @@ void World::render_scanline(int scanlineNum) {
 			}
 
 		pixel_color /= settings.pixelSamples*settings.pixelSamples;
+
+//		pixel_color = Timer::getElapsedMsec(pixelTime) / 12.0;
+
 		display_pixel(scanlineNum, x, pixel_color);
 	}
-
 }
 
 // raw_color is the pixel color computed by the ray tracer
