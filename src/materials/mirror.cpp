@@ -14,7 +14,10 @@ RGBColor Mirror::evaluate(ShadeRec &sr, uint rayDepth)
 	indirectRay.o = sr.hit_point;
 	indirectRay.d = 2*sr.normal * (sr.normal*wo) - wo;  // Reflection ray direction.
 
-	finalColor = world.tracer_ptr->trace_ray(indirectRay, rayDepth + 1);
+	uint numSamples = 3; // Hardcoded 6 samples.
+	for(uint i = 0; i < numSamples; i++ ) {
+		finalColor += world.tracer_ptr->trace_ray(indirectRay, rayDepth + 1);
+	}
 
-	return finalColor;
+	return finalColor / numSamples;
 }

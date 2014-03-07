@@ -1,11 +1,11 @@
-extern const uint g_hres = 720/2;
-extern const uint g_vres = 576/2;
+extern const uint g_hres = 720/1.5;
+extern const uint g_vres = 576/1.5;
 
 void World::build() {
 	// Settings
 	settings.pixelSamples = 4;
 	settings.maxRayDepth = 2;
-	settings.indirectSamples = 2;
+	settings.indirectSamples = 3;
 
 	// Materials
 	Matte* greyMaterial = new Matte;

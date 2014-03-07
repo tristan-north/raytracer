@@ -16,7 +16,9 @@ World world;
 
 Window::Window() : nextScanline(0)
 {
-	this->setFixedSize(g_hres, g_vres);
+	setFixedSize(g_hres, g_vres);
+	setWindowTitle("Protoray");
+
 
 	qImage = new QImage(g_hres, g_vres, QImage::Format_RGB32);
 	qImage->fill(0x000000);
