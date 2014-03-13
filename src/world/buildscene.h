@@ -3,9 +3,9 @@ extern const uint g_vres = 576/1.5;
 
 void World::build() {
 	// Settings
-	settings.pixelSamples = 4;
+	settings.pixelSamples = 10;
 	settings.maxRayDepth = 2;
-	settings.indirectSamples = 3;
+	settings.indirectSamples = 2;
 
 	// Materials
 	Matte* greyMaterial = new Matte;
@@ -33,7 +33,7 @@ void World::build() {
 	RectLight* light_ptr = new RectLight;
 	light_ptr->set_intensity(7);
 	light_ptr->set_color(1, 1, 1);
-	light_ptr->set_num_samples(4);
+	light_ptr->set_num_samples(3);
 	light_ptr->set_transform(0, 138, 80,  // translate
 							 180, 0, 0,   // rotate
 							 100, 100, 100); // scale

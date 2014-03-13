@@ -31,6 +31,7 @@ TODO:
  - Implement multi-jittered sampling as recommended by Max.
  - Implement BVH
  - Use Intel IPP for vectors, image manipulation etc.
+ - Try some asm and low level performance monitoring from http://www.agner.org/optimize/
 
 
  Basic program flow:
